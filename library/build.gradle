@@ -4,8 +4,8 @@ apply plugin: 'kotlin-android'
 def mini_api = 15
 def compile_api = 27
 def target_api = 27
-def version_code = 900
-def version_name = '0.9.00'
+def version_code = 90
+def version_name = '0.9.0'
 
 android {
     compileSdkVersion compile_api

@@ -19,7 +19,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmAbbas:dfmReactorDB:-SNAPSHOT'
+    implementation 'com.github.dfmAbbas:dfmReactorDB:0.9.0'
 }
 ```
 
