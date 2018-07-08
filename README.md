@@ -1,9 +1,11 @@
-## FabAnimator
-[![](https://jitpack.io/v/okabbas/FabAnimator.svg)](https://jitpack.io/#dfmAbbas/dfmReactor)
-[![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/dfmAbbas/dfmReactor)
-[![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/dfmAbbas/dfmReactor)
+## ReactorDB
+[![](https://jitpack.io/v/dfmAbbas/dfmReactorDB.svg)](https://jitpack.io/#dfmAbbas/dfmReactorDB)
+[![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/dfmAbbas/dfmReactorDB)
+[![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/dfmAbbas/dfmReactorDB)
 
-###### Reactor is a fast and secure key-value database for storing Android app settings and data .
+###### ReactorDB is a fast and secure key-value library for Android,
+###### and has an embedded database based on the JSON structure and is a great alternative to Shared Performance.
+###### This library has a very small size.
 
 ## Getting Started :
 Add to your root build.gradle :
@@ -42,27 +44,27 @@ dependencies {
 
 ##### In `Java` :
 ```Groovy
-        //init reactor db
-        Reactor reactor = new Reactor(this.getContext(), "database", SecurityLevel.NONE);
+  //init reactor db
+  Reactor reactor = new Reactor(this.getContext(), "database", SecurityLevel.NONE);
 
-        //insert or update value data by key
-        reactor.put("name", "abbas");
-        reactor.put("age", 23);
-        reactor.put("is_man", true);
+  //insert or update value data by key
+  reactor.put("name", "abbas");
+  reactor.put("age", 23);
+  reactor.put("is_man", true);
 
-        //get value by key
-        String name = reactor.getString("name", "ghazal");
-        int age = reactor.getInt("age", 1);
-        boolean man = reactor.getBoolean("is_man", false);
+  //get value by key
+  String name = reactor.getString("name", "ghazal");
+  int age = reactor.getInt("age", 1);
+  boolean man = reactor.getBoolean("is_man", false);
 ```
 
 ## Advanced API :
 
 ##### In `Kotlin`:
-###### [Sample code written with Kotlin](sample/src/main/java/com/github/dfmAbbas/sample/KotlinSample.kt).
+###### [Sample code written with Kotlin](sample/src/main/java/com/dfmabbas/sample/KotlinSample.kt).
 
 ##### In `Java`:
-###### [Sample code written with Java](sample/src/main/java/com/github/dfmAbbas/sample/JavaSample.java).
+###### [Sample code written with Java](sample/src/main/java/com/dfmabbas/sample/JavaSample.java).
 
 ## License
     MIT License
