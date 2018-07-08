@@ -25,20 +25,20 @@ public class JavaSample extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //init reactor db
-        Reactor reactor = new Reactor(this.getContext(), "database", SecurityLevel.NONE);
-
-        //insert or update value data by key
-        reactor.put("name", "abbas");
-        reactor.put("age", 23);
-        reactor.put("is_man", true);
-
-        //get value by key
-        String name = reactor.getString("name", "ghazal");
-        int age = reactor.getInt("age", 1);
-        boolean man = reactor.getBoolean("is_man", false);
-
-        Log.e("name ->", name);
-        Log.e("age ->", String.valueOf(age));
-        Log.e("is_man ->", String.valueOf(man));
+//        Reactor reactor = new Reactor(this.getContext(), "database", SecurityLevel.NONE);
+//
+//        //insert or update value data by key
+//        reactor.put("name", "abbas");
+//        reactor.put("age", 23);
+//        reactor.put("is_man", true);
+//
+//        //get value by key
+//        String name = reactor.getString("name", "ghazal");
+//        int age = reactor.getInt("age", 1);
+//        boolean man = reactor.getBoolean("is_man", false);
+//
+//        Log.e("name ->", name);
+//        Log.e("age ->", String.valueOf(age));
+//        Log.e("is_man ->", String.valueOf(man));
     }
 }

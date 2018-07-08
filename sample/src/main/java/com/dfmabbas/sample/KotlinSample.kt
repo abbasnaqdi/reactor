@@ -20,7 +20,7 @@ class KotlinSample : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //init reactor db
-        val reactor = Reactor(this.context!!, "database", SecurityLevel.NONE)
+        val reactor = Reactor(this.context!!, "database", SecurityLevel.POWERFUL)
 
         //insert or update value data by key
         reactor.put("name", "abbas")
