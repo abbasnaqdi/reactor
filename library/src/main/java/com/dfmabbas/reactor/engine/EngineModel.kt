@@ -43,21 +43,14 @@ internal class EngineModel(context: Context, db_name: String) {
     internal fun insert(key: String, value: String, type: Any): Boolean {
         val file = getFile(type)
         val jsonObject = JSONObject(fileHandler?.readJSON(file))
-
         jsonObject.putOpt(key, value)
 
-        if (fileHandler?.writeJSON(file, jsonObject.toString())!!)
-            return true
-
-        return false
+        return fileHandler?.writeJSON(file, jsonObject.toString())!!
     }
 
     internal fun update(key: String, value: String, type: Any): Boolean {
         val file = getFile(type)
         val jsonObject = JSONObject(fileHandler?.readJSON(file))
-
-        //jsonObject.accumulate(key, value)
-
         if (fileHandler?.writeJSON(file, jsonObject.toString())!!)
             return true
 
@@ -67,7 +60,6 @@ internal class EngineModel(context: Context, db_name: String) {
     internal fun delete(key: String, type: Any): Boolean {
         val file = getFile(type)
         val jsonObject = JSONObject(fileHandler?.readJSON(file))
-
         jsonObject.remove(key)
 
         return fileHandler?.writeJSON(file, jsonObject.toString())!!

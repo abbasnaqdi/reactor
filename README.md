@@ -5,8 +5,6 @@
 
 ###### Reactor is a fast and secure key-value database for storing Android app settings and data .
 
-
-
 ## Getting Started :
 Add to your root build.gradle :
 ```Groovy
@@ -20,7 +18,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation :) developing ...
+    implementation 'com.github.dfmAbbas:dfmReactorDB:-SNAPSHOT'
 }
 ```
 
@@ -44,15 +42,27 @@ dependencies {
 
 ##### In `Java` :
 ```Groovy
+        //init reactor db
+        Reactor reactor = new Reactor(this.getContext(), "database", SecurityLevel.NONE);
+
+        //insert or update value data by key
+        reactor.put("name", "abbas");
+        reactor.put("age", 23);
+        reactor.put("is_man", true);
+
+        //get value by key
+        String name = reactor.getString("name", "ghazal");
+        int age = reactor.getInt("age", 1);
+        boolean man = reactor.getBoolean("is_man", false);
 ```
 
 ## Advanced API :
 
 ##### In `Kotlin`:
-###### [Sample code written with Katlin](Sample/src/main/java/com/github/okabbas/FabAnimator/Sample/KotlinView.kt).
+###### [Sample code written with Kotlin](sample/src/main/java/com/github/dfmAbbas/sample/KotlinSample.kt).
 
 ##### In `Java`:
-###### [Sample code written with Java](Sample/src/main/java/com/github/okabbas/FabAnimator/Sample/JavaView.java).
+###### [Sample code written with Java](sample/src/main/java/com/github/dfmAbbas/sample/JavaSample.java).
 
 ## License
     MIT License

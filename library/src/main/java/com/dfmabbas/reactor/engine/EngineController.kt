@@ -55,20 +55,14 @@ internal class EngineController(context: Context, db_name: String, security_leve
         }
     }
 
-    internal fun append(key: String, value: Any): Boolean {
+    internal fun put(key: String, value: Any): Boolean {
         val corrected = securityController?.encryptValue(key, value.toString(), securityLevel!!)
-
-        if (!engineModel?.isKey(key, value)!!)
-            engineModel?.insert(key, corrected!!, value)
-        else
-            engineModel?.update(key, corrected!!, value)
-
-        return true
+        return engineModel?.insert(key, corrected!!, value)!!
     }
 
     internal fun get(key: String, type: Any): Any? {
         if (!engineModel?.isKey(key, type)!!)
-            return ""
+            return null
 
         val value = securityController?.decryptValue(key,
                 engineModel?.select(key, type).toString(),

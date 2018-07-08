@@ -17,36 +17,36 @@ class Reactor(context: Context, dbName: String, securityLevel: SecurityLevel) {
             engineController = EngineController(context, dbName, securityLevel)
     }
 
-    fun put(key: String, value: Any): Boolean? {
-        return engineController?.append(key, value)
+    fun put(key: String, value: Any): Boolean {
+        return engineController?.put(key, value)!!
     }
 
-    fun get(key: String, default: Any): Any? {
-        return engineController?.get(key, default)
+    fun get(key: String, default: Any): Any {
+        return engineController?.get(key, default) ?: return default
     }
 
-    fun getString(key: String, default: Any): String? {
-        return engineController?.get(key, default) as String?
+    fun getString(key: String, default: Any): String {
+        return get(key, default).toString()
     }
 
-    fun getBoolean(key: String, default: Any): Boolean? {
-        return engineController?.get(key, default) as Boolean?
+    fun getBoolean(key: String, default: Any): Boolean {
+        return get(key, default).toString().toBoolean()
     }
 
-    fun getInt(key: String, default: Any): Int? {
-        return engineController?.get(key, default) as Int?
+    fun getInt(key: String, default: Any): Int {
+        return get(key, default).toString().toInt()
     }
 
-    fun getFloat(key: String, default: Any): Float? {
-        return engineController?.get(key, default) as Float?
+    fun getFloat(key: String, default: Any): Float {
+        return get(key, default).toString().toFloat()
     }
 
-    fun getLong(key: String, default: Any): Long? {
-        return engineController?.get(key, default) as Long?
+    fun getLong(key: String, default: Any): Long {
+        return get(key, default).toString().toLong()
     }
 
-    fun getDouble(key: String, default: Any): Double? {
-        return engineController?.get(key, default) as Double?
+    fun getDouble(key: String, default: Any): Double {
+        return get(key, default).toString().toDouble()
     }
 
     fun remove(key: String, type: Any): Boolean {
