@@ -3,8 +3,7 @@
 [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/dfmAbbas/dfmReactorDB)
 [![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/dfmAbbas/dfmReactorDB)
 
-###### ReactorDB is a fast and secure key-value library for Android,
-###### and has an embedded database based on the JSON structure and is a great alternative to Shared Performance.
+###### ReactorDB is a fast and secure key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Performance.
 ###### This library has a very small size.
 
 ## Getting Started :
@@ -29,7 +28,7 @@ dependencies {
 ##### In `Kotlin`:
 ```Groovy
   //init reactor db
-  val reactor = Reactor(applicationContext, "UDB", SecurityLevel.NONE)
+  val reactor = Reactor(applicationContext, "sample_db", SecurityLevel.NONE)
 
   //insert or update value data by key
   reactor.put("name", "abbas")
@@ -37,15 +36,15 @@ dependencies {
   reactor.put("is_man", true)
 
   //get value by key
-  val name = reactor.getString("name", "ghazale")
-  val age = reactor.getInt("age", 1)
+  val name = reactor.getString("name", "none")
+  val age = reactor.getInt("age", 0)
   val man = reactor.getBoolean("is_man", false)
 ```
 
 ##### In `Java` :
 ```Groovy
   //init reactor db
-  Reactor reactor = new Reactor(this.getContext(), "database", SecurityLevel.NONE);
+  Reactor reactor = new Reactor(this.getContext(), "sample_db", SecurityLevel.NONE);
 
   //insert or update value data by key
   reactor.put("name", "abbas");
@@ -53,8 +52,8 @@ dependencies {
   reactor.put("is_man", true);
 
   //get value by key
-  String name = reactor.getString("name", "ghazal");
-  int age = reactor.getInt("age", 1);
+  String name = reactor.getString("name", "none");
+  int age = reactor.getInt("age", 0);
   boolean man = reactor.getBoolean("is_man", false);
 ```
 
@@ -69,7 +68,7 @@ dependencies {
 ## License
     MIT License
 
-    Copyright (c) 2018 Abbas Naghdi
+    Copyright (c) 2018 Abbas Naghdi (@dfmAbbas)
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
