@@ -7,21 +7,10 @@ import java.io.*
 internal class FileHandler(private val context: Context) {
 
     internal fun writeJSON(file: File, value: String): Boolean {
-        var bw: BufferedWriter? = null
-        var fw: FileWriter? = null
+        val fileOutputStream = FileOutputStream(file)
 
-        fw = FileWriter(file);
-        bw = BufferedWriter(fw);
-
-        bw.write(value);
-
-        bw.close();
-        fw.close();
-
-//        val fileOutputStream = FileOutputStream(file)
-//
-//        fileOutputStream.write(value.toByteArray())
-//        fileOutputStream.close()
+        fileOutputStream.write(value.toByteArray())
+        fileOutputStream.close()
 
         return true
     }
@@ -38,7 +27,6 @@ internal class FileHandler(private val context: Context) {
         }
 
         myReader.close()
-
         result = aBuffer.toString()
 
         return result

@@ -26,7 +26,7 @@ internal class EngineModel(context: Context, db_name: String) {
     internal fun makeDocument(name: String): Boolean {
         val file = File(appContext?.getPath() + "$dbName/$name.json")
         if (file.createNewFile()) {
-            return true
+            return fileHandler?.writeJSON(file, "{}")!!
         }
 
         return false
@@ -44,7 +44,7 @@ internal class EngineModel(context: Context, db_name: String) {
         val file = getFile(type)
         val jsonObject = JSONObject(fileHandler?.readJSON(file))
 
-        jsonObject.put(key, value)
+        jsonObject.putOpt(key, value)
 
         if (fileHandler?.writeJSON(file, jsonObject.toString())!!)
             return true
@@ -53,7 +53,15 @@ internal class EngineModel(context: Context, db_name: String) {
     }
 
     internal fun update(key: String, value: String, type: Any): Boolean {
-        return true
+        val file = getFile(type)
+        val jsonObject = JSONObject(fileHandler?.readJSON(file))
+
+        //jsonObject.accumulate(key, value)
+
+        if (fileHandler?.writeJSON(file, jsonObject.toString())!!)
+            return true
+
+        return false
     }
 
     internal fun delete(key: String, type: Any): Boolean {
@@ -62,27 +70,21 @@ internal class EngineModel(context: Context, db_name: String) {
 
         jsonObject.remove(key)
 
-        if (fileHandler?.writeJSON(file, jsonObject.toString())!!)
-            return true
-
-        return false
+        return fileHandler?.writeJSON(file, jsonObject.toString())!!
     }
 
     internal fun select(key: String, type: Any): Any {
         val file = getFile(type)
         val jsonObject = JSONObject(fileHandler?.readJSON(file))
 
-        return jsonObject.get(key)
+        return jsonObject.opt(key)
     }
 
     internal fun isKey(key: String, type: Any): Boolean {
         val file = getFile(type)
         val jsonObject = JSONObject(fileHandler?.readJSON(file))
 
-        if (jsonObject.length() == 0 || jsonObject.get(key) != null)
-            return false
-
-        return true
+        return jsonObject.has(key)
     }
 
     internal fun clearAll(): Boolean {

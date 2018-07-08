@@ -15,7 +15,6 @@ class Reactor(context: Context, dbName: String, securityLevel: SecurityLevel) {
 
         if (engineController == null)
             engineController = EngineController(context, dbName, securityLevel)
-
     }
 
     fun put(key: String, value: Any): Boolean? {

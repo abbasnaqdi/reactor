@@ -19,35 +19,39 @@ internal class EngineController(context: Context, db_name: String, security_leve
         if (securityController == null)
             securityController = SecurityController(appContext?.packageName!!)
 
-        if (this.dbName == null) {
-            this.dbName = securityController?.hashValue(dbName + securityLevel.toString())
-        }
+        if (this.dbName == null)
+            this.dbName = db_name
+
 
         if (this.securityLevel == null) this.securityLevel = security_level
 
         if (engineModel == null) {
             engineModel = EngineModel(appContext!!, this.dbName!!)
 
-            if (!engineModel?.isDatabase()!!)
+            if (!engineModel?.isDatabase()!!) {
                 engineModel?.makeDatabase()
 
-            if (!engineModel?.isDocument("bool")!!)
-                engineModel?.makeDocument("bool")
+                if (!engineModel?.isDocument("string")!!)
+                    engineModel?.makeDocument("string")
 
-            if (!engineModel?.isDocument("int")!!)
-                engineModel?.makeDocument("int")
+                if (!engineModel?.isDocument("bool")!!)
+                    engineModel?.makeDocument("bool")
 
-            if (!engineModel?.isDocument("long")!!)
-                engineModel?.makeDocument("long")
+                if (!engineModel?.isDocument("int")!!)
+                    engineModel?.makeDocument("int")
 
-            if (!engineModel?.isDocument("double")!!)
-                engineModel?.makeDocument("double")
+                if (!engineModel?.isDocument("long")!!)
+                    engineModel?.makeDocument("long")
 
-            if (!engineModel?.isDocument("float")!!)
-                engineModel?.makeDocument("float")
+                if (!engineModel?.isDocument("double")!!)
+                    engineModel?.makeDocument("double")
 
-            if (!engineModel?.isDocument("unk")!!)
-                engineModel?.makeDocument("unk")
+                if (!engineModel?.isDocument("float")!!)
+                    engineModel?.makeDocument("float")
+
+                if (!engineModel?.isDocument("unk")!!)
+                    engineModel?.makeDocument("unk")
+            }
         }
     }
 
@@ -62,11 +66,15 @@ internal class EngineController(context: Context, db_name: String, security_leve
         return true
     }
 
-    internal fun get(key: String, type: Any): Any {
+    internal fun get(key: String, type: Any): Any? {
         if (!engineModel?.isKey(key, type)!!)
             return ""
 
-        return engineModel?.select(key, type)!!
+        val value = securityController?.decryptValue(key,
+                engineModel?.select(key, type).toString(),
+                securityLevel!!)
+
+        return value
     }
 
     internal fun remove(key: String, type: Any): Boolean {

@@ -21,7 +21,7 @@ class MainView : AppCompatActivity() {
         reactor.put("is_man", true)
 
         //get value by key
-        val name = reactor.getString("name", "ghazale")
+        val name = reactor.getString("name", "ghazal")
         val age = reactor.getInt("age", 1)
         val man = reactor.getBoolean("is_man", false)
 

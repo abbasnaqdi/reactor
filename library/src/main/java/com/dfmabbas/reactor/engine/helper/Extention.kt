@@ -14,6 +14,7 @@ internal fun Any.getType(): String {
     }
 }
 
+
 internal fun Context.getPath(): String {
     return this.filesDir?.path + "/"
 }
