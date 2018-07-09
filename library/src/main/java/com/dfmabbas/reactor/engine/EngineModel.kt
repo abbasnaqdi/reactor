@@ -1,90 +1,78 @@
 package com.dfmabbas.reactor.engine
 
 import android.content.Context
-import com.dfmabbas.reactor.engine.helper.FileHandler
-import com.dfmabbas.reactor.engine.helper.getPath
-import com.dfmabbas.reactor.engine.helper.getType
 import org.json.JSONObject
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 internal class EngineModel(context: Context, db_name: String) {
 
     private var appContext: Context? = null
-    private var fileHandler: FileHandler? = null
     private var dbName: String? = null
+    private var pathDir: String? = null
 
     init {
         if (this.appContext == null) this.appContext = context
         if (this.dbName == null) this.dbName = db_name
-        if (this.fileHandler == null) this.fileHandler = FileHandler(context)
+        if (pathDir == null) pathDir = appContext?.getPath()
     }
 
     internal fun makeDatabase(): Boolean {
-        return File(appContext?.getPath() + dbName).mkdir()
+        return File(pathDir + dbName).mkdir()
     }
 
     internal fun makeDocument(name: String): Boolean {
-        val file = File(appContext?.getPath() + "$dbName/$name.json")
+        val file = File("$pathDir$dbName/$name.json")
+
         if (file.createNewFile()) {
-            return fileHandler?.writeJSON(file, "{}")!!
+            return writeJSON(file, JSONObject())
         }
 
         return false
     }
 
     internal fun isDatabase(): Boolean {
-        return File(appContext?.getPath() + dbName).exists()
+        return File(pathDir + dbName).exists()
     }
 
     internal fun isDocument(name: String): Boolean {
-        return File(appContext?.getPath() + "$dbName/$name.json").exists()
+        return File("$pathDir$dbName/$name.json").exists()
     }
 
-    internal fun insert(key: String, value: String, type: Any): Boolean {
-        val file = getFile(type)
-        val jsonObject = JSONObject(fileHandler?.readJSON(file))
-        jsonObject.putOpt(key, value)
-
-        return fileHandler?.writeJSON(file, jsonObject.toString())!!
+    internal fun fetchJSON(name: String): JSONObject {
+        val file = File("$pathDir$dbName/$name.json")
+        return readJSON(file)
     }
 
-    internal fun update(key: String, value: String, type: Any): Boolean {
-        val file = getFile(type)
-        val jsonObject = JSONObject(fileHandler?.readJSON(file))
-        if (fileHandler?.writeJSON(file, jsonObject.toString())!!)
-            return true
-
-        return false
-    }
-
-    internal fun delete(key: String, type: Any): Boolean {
-        val file = getFile(type)
-        val jsonObject = JSONObject(fileHandler?.readJSON(file))
-        jsonObject.remove(key)
-
-        return fileHandler?.writeJSON(file, jsonObject.toString())!!
-    }
-
-    internal fun select(key: String, type: Any): Any {
-        val file = getFile(type)
-        val jsonObject = JSONObject(fileHandler?.readJSON(file))
-
-        return jsonObject.opt(key)
-    }
-
-    internal fun isKey(key: String, type: Any): Boolean {
-        val file = getFile(type)
-        val jsonObject = JSONObject(fileHandler?.readJSON(file))
-
-        return jsonObject.has(key)
+    internal fun saveJSON(name: String, jsonObject: JSONObject): Boolean {
+        val file = File("$pathDir$dbName/$name.json")
+        return writeJSON(file, jsonObject)!!
     }
 
     internal fun clearAll(): Boolean {
-        return File(appContext?.getPath() + dbName).delete()
+        return File(pathDir + dbName).delete()
     }
 
-    private fun getFile(type: Any): File {
-        val name = type.getType()
-        return File(appContext?.getPath() + "$dbName/$name.json")
+    private fun writeJSON(file: File, jsonObject: JSONObject): Boolean {
+        val fileOutputStream = FileOutputStream(file)
+
+        fileOutputStream.write(jsonObject.toString().toByteArray())
+        fileOutputStream.close()
+
+        return true
+    }
+
+    private fun readJSON(file: File): JSONObject {
+        val fileInputStream = FileInputStream(file)
+        val size = fileInputStream.available()
+        val buffer = ByteArray(size)
+
+        fileInputStream.read(buffer)
+        fileInputStream.close()
+
+        val value = String(buffer, Charsets.UTF_8)
+
+        return JSONObject(value)
     }
 }

@@ -56,26 +56,39 @@ internal class EngineController(context: Context, db_name: String, security_leve
     }
 
     internal fun put(key: String, value: Any): Boolean {
-        val corrected = securityController?.encryptValue(key, value.toString(), securityLevel!!)
-        return engineModel?.insert(key, corrected!!, value)!!
+        val name = getType(value)
+        val secureValue = securityController?.encryptValue(key, value.toString(), securityLevel!!)
+
+        val fetchObject = engineModel?.fetchJSON(name)
+        fetchObject?.putOpt(key, secureValue)
+
+        return engineModel?.saveJSON(name, fetchObject!!)!!
     }
 
-    internal fun get(key: String, type: Any): Any? {
-        if (!engineModel?.isKey(key, type)!!)
-            return null
+    internal fun <T> get(key: String, default: T): T {
+        val name = getType(default)
+        val fetchObject = engineModel?.fetchJSON(name)!!
+
+        if (!fetchObject.has(key))
+            return default
 
         val value = securityController?.decryptValue(key,
-                engineModel?.select(key, type).toString(),
+                fetchObject.opt(key).toString(),
                 securityLevel!!)
 
-        return value
+        return value?.convertToAny(default!!) as T
     }
 
     internal fun remove(key: String, type: Any): Boolean {
-        if (!engineModel?.isKey(key, type)!!)
+        val name = getType(type)
+        val fetchObject = engineModel?.fetchJSON(name)!!
+
+        if (!fetchObject.has(key))
             return true
 
-        return engineModel?.delete(key, type)!!
+        fetchObject.remove(key)
+
+        return engineModel?.saveJSON(name, fetchObject)!!
     }
 
     internal fun clearAll(): Boolean {

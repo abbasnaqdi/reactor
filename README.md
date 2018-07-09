@@ -1,9 +1,9 @@
 ## ReactorDB
-[![](https://jitpack.io/v/dfmAbbas/dfmReactorDB.svg)](https://jitpack.io/#dfmAbbas/dfmReactorDB)
-[![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/dfmAbbas/dfmReactorDB)
-[![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/dfmAbbas/dfmReactorDB)
+[![](https://jitpack.io/v/dfmabbas/reactor.svg)](https://jitpack.io/#dfmAbbas/reactor)
+[![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/dfmabbas/reactor)
+[![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/dfmabbas/reactor)
 
-###### ReactorDB is a fast and secure key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Performance.
+###### reactor is a fast and secure key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Performance.
 ###### This library has a very small size.
 
 ## Getting Started :
@@ -19,7 +19,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmAbbas:dfmReactorDB:0.9.0'
+    implementation 'com.github.dfmabbas:reactor:0.9.9'
 }
 ```
 
@@ -27,34 +27,42 @@ dependencies {
 
 ##### In `Kotlin`:
 ```Groovy
-  //init reactor db
-  val reactor = Reactor(applicationContext, "sample_db", SecurityLevel.NONE)
+    //init reactor db
+    val reactor = Reactor(applicationContext, "sample_db", SecurityLevel.NONE)
 
-  //insert or update value data by key
-  reactor.put("name", "abbas")
-  reactor.put("age", 23)
-  reactor.put("is_man", true)
+    // insert or update value data by key
+    reactor?.put("name", "abbas")
+    reactor?.put("age", 23)
+    reactor?.put("is_man", true)
 
-  //get value by key
-  val name = reactor.getString("name", "none")
-  val age = reactor.getInt("age", 0)
-  val man = reactor.getBoolean("is_man", false)
+    //get value by key
+    val name = reactor?.get("name", "")
+    val age = reactor?.get("age", 1)
+    val man = reactor?.get("is_man", false)
+
+    Log.i("name ->", name);
+    Log.i("age ->", age.toString());
+    Log.i("is_man ->", man.toString());
 ```
 
 ##### In `Java` :
 ```Groovy
-  //init reactor db
-  Reactor reactor = new Reactor(this.getContext(), "sample_db", SecurityLevel.NONE);
+    //init reactor db
+    Reactor reactor = new Reactor(this.getContext(), "sample_db", SecurityLevel.NONE);
 
-  //insert or update value data by key
-  reactor.put("name", "abbas");
-  reactor.put("age", 23);
-  reactor.put("is_man", true);
+    //insert or update value data by key
+    reactor.put("name", "abbas");
+    reactor.put("age", 23);
+    reactor.put("is_man", true);
 
-  //get value by key
-  String name = reactor.getString("name", "none");
-  int age = reactor.getInt("age", 0);
-  boolean man = reactor.getBoolean("is_man", false);
+    //get value by key
+    String name = reactor.get("name", "");
+    int age = reactor.get("age", 1);
+    boolean man = reactor.get("is_man", false);
+
+    Log.i("name ->", name);
+    Log.i("age ->", String.valueOf(age));
+    Log.i("is_man ->", String.valueOf(man));
 ```
 
 ## Advanced API :
@@ -68,7 +76,7 @@ dependencies {
 ## License
     MIT License
 
-    Copyright (c) 2018 Abbas Naghdi (@dfmAbbas)
+    Copyright (c) 2018 Abbas Naghdi (@dfmabbas)
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
