@@ -19,7 +19,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmabbas:reactor:1.0.0'
+    implementation 'com.github.dfmabbas:reactor:v1.0.0'
 }
 ```
 
@@ -28,25 +28,25 @@ dependencies {
 ##### In `Kotlin`:
 ```Groovy
 reactor = Reactor()
-    .setContext(context!!)                      //application context
-    .setDatabaseName("simple_db")               //optional database name
-    .setSecurityLevel(SecurityLevel.POWERFUL)   //optional cryptographic algorithm
-    .build()                                    //build class
+    .setContext(context!!)                          //application context
+    .setDatabaseName("simple_db")                   //optional database name
+    .setSecurityLevel(SecurityLevel.POWERFUL)       //optional cryptographic algorithm
+    .build()                                        //build class
 
 //simple
 
-reactor.remove("age", 0)               //remove key age -> 0 is a type number
-reactor.clearAll()                     //clear all key-value
+reactor.remove("age", 0)                //remove key age -> 0 is a type number
+reactor.clearAll()                      //clear all key-value
 
-reactor.put("name", "abbas")           //put name to string json
-reactor.put("age", 23)                 //put age to int json
-reactor.put("is_man", true)            //put is_man to boolean json
+reactor.put("name", "abbas")            //put name to string json
+reactor.put("age", 23)                  //put age to int json
+reactor.put("is_man", true)             //put is_man to boolean json
 
 //or other types of data ...
 
-val name = reactor.get("name", "")     //get name of string json
-val age = reactor.get("age", 1)        //get age of int json
-val man = reactor.get("is_man", false) //get is_man of boolean json
+val name = reactor.get("name", "")      //get name of string json
+val age = reactor.get("age", 1)         //get age of int json
+val man = reactor.get("is_man", false)  //get is_man of boolean json
 
 //or other types of data ...
 
@@ -55,10 +55,10 @@ val man = reactor.get("is_man", false) //get is_man of boolean json
 ##### In `Java` :
 ```Groovy
 reactor = new Reactor()
-    .setContext(getContext())                     //application context
-    .setDatabaseName("simple_db")               //optional database name
-    .setSecurityLevel(SecurityLevel.POWERFUL)   //optional cryptographic algorithm
-    .build();                                     //build class
+    .setContext(getContext())                       //application context
+    .setDatabaseName("simple_db")                   //optional database name
+    .setSecurityLevel(SecurityLevel.POWERFUL)       //optional cryptographic algorithm
+    .build();                                       //build class
 
 //simple
 
@@ -82,10 +82,10 @@ Boolean man = reactor.get("is_man", false);     //get is_man of boolean json
 ## Advanced API :
 
 ##### In `Kotlin`:
-###### [Sample code written with Kotlin](sample/src/main/java/com/dfmabbas/sample/KotlinSample.kt).
+###### [Sample code written with Kotlin](sample/src/main/java/com/dfmabbas/sample/KotlinSample.kt) .
 
 ##### In `Java`:
-###### [Sample code written with Java](sample/src/main/java/com/dfmabbas/sample/JavaSample.java).
+###### [Sample code written with Java](sample/src/main/java/com/dfmabbas/sample/JavaSample.java) .
 
 ## License
     MIT License
