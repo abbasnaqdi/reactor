@@ -1,4 +1,4 @@
-## ReactorDB
+## reactor
 [![](https://jitpack.io/v/dfmabbas/reactor.svg)](https://jitpack.io/#dfmAbbas/reactor)
 [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/dfmabbas/reactor)
 [![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/dfmabbas/reactor)
@@ -11,7 +11,7 @@ Add to your root build.gradle :
 ```Groovy
 allprojects {
   repositories {
-      maven { url 'https://jitpack.io' } // add this line to repositories
+      maven { url 'https://jitpack.io' }
     }
   }
 ```
@@ -19,7 +19,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmabbas:reactor:0.9.9'
+    implementation 'com.github.dfmabbas:reactor:1.0.0'
 }
 ```
 
@@ -27,42 +27,56 @@ dependencies {
 
 ##### In `Kotlin`:
 ```Groovy
-    //init reactor db
-    val reactor = Reactor(applicationContext, "sample_db", SecurityLevel.NONE)
+reactor = Reactor()
+    .setContext(context!!)                      //application context
+    .setDatabaseName("simple_db")               //optional database name
+    .setSecurityLevel(SecurityLevel.POWERFUL)   //optional cryptographic algorithm
+    .build()                                    //build class
 
-    // insert or update value data by key
-    reactor?.put("name", "abbas")
-    reactor?.put("age", 23)
-    reactor?.put("is_man", true)
+//simple
 
-    //get value by key
-    val name = reactor?.get("name", "")
-    val age = reactor?.get("age", 1)
-    val man = reactor?.get("is_man", false)
+reactor.remove("age", 0)               //remove key age -> 0 is a type number
+reactor.clearAll()                     //clear all key-value
 
-    Log.i("name ->", name);
-    Log.i("age ->", age.toString());
-    Log.i("is_man ->", man.toString());
+reactor.put("name", "abbas")           //put name to string json
+reactor.put("age", 23)                 //put age to int json
+reactor.put("is_man", true)            //put is_man to boolean json
+
+//or other types of data ...
+
+val name = reactor.get("name", "")     //get name of string json
+val age = reactor.get("age", 1)        //get age of int json
+val man = reactor.get("is_man", false) //get is_man of boolean json
+
+//or other types of data ...
+
 ```
 
 ##### In `Java` :
 ```Groovy
-    //init reactor db
-    Reactor reactor = new Reactor(this.getContext(), "sample_db", SecurityLevel.NONE);
+reactor = new Reactor()
+    .setContext(getContext())                     //application context
+    .setDatabaseName("simple_db")               //optional database name
+    .setSecurityLevel(SecurityLevel.POWERFUL)   //optional cryptographic algorithm
+    .build();                                     //build class
 
-    //insert or update value data by key
-    reactor.put("name", "abbas");
-    reactor.put("age", 23);
-    reactor.put("is_man", true);
+//simple
 
-    //get value by key
-    String name = reactor.get("name", "");
-    int age = reactor.get("age", 1);
-    boolean man = reactor.get("is_man", false);
+reactor.remove("age", 0);                       //remove key age -> 0 is a type number
+reactor.clearAll();                             //clear all key-value
 
-    Log.i("name ->", name);
-    Log.i("age ->", String.valueOf(age));
-    Log.i("is_man ->", String.valueOf(man));
+reactor.put("name", "abbas");                   //put name to string json
+reactor.put("age", 23);                         //put age to int json
+reactor.put("is_man", true);                    //put is_man to boolean json
+
+//or other types of data ...
+
+String name = reactor.get("name", "");          //get name of string json
+Integer age = reactor.get("age", 1);            //get age of int json
+Boolean man = reactor.get("is_man", false);     //get is_man of boolean json
+
+//or other types of data ...
+
 ```
 
 ## Advanced API :

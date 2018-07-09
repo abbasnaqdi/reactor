@@ -18,7 +18,6 @@ internal class SecurityController(scope: String) {
             SecurityLevel.POWERFUL -> encryptPowerful(key, value)!!
             SecurityLevel.FAST -> encryptFast(value)!!
             SecurityLevel.NONE -> value
-            else -> value
         }
     }
 
@@ -27,7 +26,6 @@ internal class SecurityController(scope: String) {
             SecurityLevel.POWERFUL -> decryptPowerful(key, value)!!
             SecurityLevel.FAST -> decryptFast(value)!!
             SecurityLevel.NONE -> value
-            else -> value
         }
     }
 

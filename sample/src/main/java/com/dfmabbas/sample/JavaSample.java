@@ -4,13 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dfmabbas.reactor.handler.Reactor;
-import com.dfmabbas.reactor.handler.SecurityLevel;
 
 
 public class JavaSample extends Fragment {
@@ -34,24 +32,30 @@ public class JavaSample extends Fragment {
             }
         });
 
-        //init reactor db
-        reactor = new Reactor(this.getContext(), "database", SecurityLevel.POWERFUL);
+        reactor = new Reactor()
+                .setContext(getContext())                   //application context
+                //.setDatabaseName("simple_db")               //optional database name
+                //.setSecurityLevel(SecurityLevel.POWERFUL)   //optional cryptographic algorithm
+                .build();                                   //build class
     }
 
     private void sampleCode() {
 
-        //insert or update value data by key
-        reactor.put("name", "abbas");
-        reactor.put("age", 23);
-        reactor.put("is_man", true);
+        //simple
 
-        //get value by key
-        String name = reactor.get("name", "");
-        int age = reactor.get("age", 1);
-        boolean man = reactor.get("is_man", false);
+        reactor.remove("age", 0);    //remove key age -> 0 is a type number
+        reactor.clearAll();                     //clear all key-value
 
-        Log.i("name ->", name);
-        Log.i("age ->", String.valueOf(age));
-        Log.i("is_man ->", String.valueOf(man));
+        reactor.put("name", "abbas");          //put name to string json
+        reactor.put("age", 23);               //put age to int json
+        reactor.put("is_man", true);           //put is_man to boolean json
+
+        //or ...
+
+        String name = reactor.get("name", "");          //get name of string json
+        Integer age = reactor.get("age", 1);               //get age of int json
+        Boolean man = reactor.get("is_man", false);    //get is_man of boolean json
+
+        //or ...
     }
 }

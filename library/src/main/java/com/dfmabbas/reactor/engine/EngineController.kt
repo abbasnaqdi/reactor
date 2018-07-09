@@ -21,37 +21,38 @@ internal class EngineController(context: Context, db_name: String, security_leve
 
         if (this.dbName == null)
             this.dbName = db_name
-
+        if (engineModel == null)
+            engineModel = EngineModel(appContext!!, this.dbName!!)
 
         if (this.securityLevel == null) this.securityLevel = security_level
 
-        if (engineModel == null) {
-            engineModel = EngineModel(appContext!!, this.dbName!!)
+        configEngine()
+    }
 
-            if (!engineModel?.isDatabase()!!) {
-                engineModel?.makeDatabase()
+    private fun configEngine() {
+        if (!engineModel?.isDatabase()!!) {
+            engineModel?.makeDatabase()
 
-                if (!engineModel?.isDocument("string")!!)
-                    engineModel?.makeDocument("string")
+            if (!engineModel?.isDocument("string")!!)
+                engineModel?.makeDocument("string")
 
-                if (!engineModel?.isDocument("bool")!!)
-                    engineModel?.makeDocument("bool")
+            if (!engineModel?.isDocument("bool")!!)
+                engineModel?.makeDocument("bool")
 
-                if (!engineModel?.isDocument("int")!!)
-                    engineModel?.makeDocument("int")
+            if (!engineModel?.isDocument("int")!!)
+                engineModel?.makeDocument("int")
 
-                if (!engineModel?.isDocument("long")!!)
-                    engineModel?.makeDocument("long")
+            if (!engineModel?.isDocument("long")!!)
+                engineModel?.makeDocument("long")
 
-                if (!engineModel?.isDocument("double")!!)
-                    engineModel?.makeDocument("double")
+            if (!engineModel?.isDocument("double")!!)
+                engineModel?.makeDocument("double")
 
-                if (!engineModel?.isDocument("float")!!)
-                    engineModel?.makeDocument("float")
+            if (!engineModel?.isDocument("float")!!)
+                engineModel?.makeDocument("float")
 
-                if (!engineModel?.isDocument("unk")!!)
-                    engineModel?.makeDocument("unk")
-            }
+            if (!engineModel?.isDocument("unk")!!)
+                engineModel?.makeDocument("unk")
         }
     }
 
@@ -92,6 +93,9 @@ internal class EngineController(context: Context, db_name: String, security_leve
     }
 
     internal fun clearAll(): Boolean {
-        return engineModel?.clearAll()!!;
+        val result = engineModel?.clearAll()!!
+        configEngine()
+
+        return result
     }
 }

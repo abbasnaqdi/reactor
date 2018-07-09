@@ -47,11 +47,11 @@ internal class EngineModel(context: Context, db_name: String) {
 
     internal fun saveJSON(name: String, jsonObject: JSONObject): Boolean {
         val file = File("$pathDir$dbName/$name.json")
-        return writeJSON(file, jsonObject)!!
+        return writeJSON(file, jsonObject)
     }
 
     internal fun clearAll(): Boolean {
-        return File(pathDir + dbName).delete()
+        return File(pathDir + dbName).deleteRecursively()
     }
 
     private fun writeJSON(file: File, jsonObject: JSONObject): Boolean {
