@@ -1,4 +1,4 @@
-## reactor
+### reactor
 [![](https://jitpack.io/v/dfmabbas/reactor.svg)](https://jitpack.io/#dfmAbbas/reactor)
 [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/dfmabbas/reactor)
 [![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/dfmabbas/reactor)
@@ -6,7 +6,7 @@
 ###### reactor is a fast and secure key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Performance.
 ###### This library has a very small size.
 
-## Getting Started :
+### Getting Started :
 Add to your root build.gradle :
 ```Groovy
 allprojects {
@@ -23,7 +23,7 @@ dependencies {
 }
 ```
 
-## Simple API (default) :
+### Simple API (default) :
 
 ##### In `Kotlin`:
 ```Groovy
@@ -77,7 +77,7 @@ Boolean man = reactor.get("is_man", false);         //get is_man of boolean json
 
 ```
 
-## Advanced API :
+### Advanced API :
 
 ##### In `Kotlin`:
 ###### [Sample code written with Kotlin](sample/src/main/java/com/dfmabbas/sample/KotlinSample.kt) .
@@ -85,7 +85,7 @@ Boolean man = reactor.get("is_man", false);         //get is_man of boolean json
 ##### In `Java`:
 ###### [Sample code written with Java](sample/src/main/java/com/dfmabbas/sample/JavaSample.java) .
 
-## License
+### License
     MIT License
 
     Copyright (c) 2018 Abbas Naghdi (@dfmabbas)
