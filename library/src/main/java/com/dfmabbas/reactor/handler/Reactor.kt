@@ -3,18 +3,18 @@ package com.dfmabbas.reactor.handler
 import android.content.Context
 import com.dfmabbas.reactor.engine.EngineController
 
-class Reactor {
+class Reactor(context: Context) {
+
     private var appContext: Context? = null;
     private var securityLevel: SecurityLevel? = null
     private var dbName: String? = null;
     private var engineController: EngineController? = null
 
-    fun setContext(context: Context): Reactor {
+    init {
         if (this.appContext == null)
             this.appContext = context
-
-        return this
     }
+
 
     fun setDatabaseName(name: String): Reactor {
         if (this.dbName == null)
@@ -31,16 +31,13 @@ class Reactor {
     }
 
     fun build(): Reactor? {
-        if (appContext == null)
-            return null
-
         if (dbName == null)
             dbName = appContext?.packageName?.length.toString()
 
         if (securityLevel == null)
             securityLevel = SecurityLevel.POWERFUL
 
-        dbName += securityLevel.toString()
+        dbName += "_" + securityLevel.toString()
 
         if (engineController == null)
             engineController = EngineController(appContext!!, dbName!!, securityLevel!!)
