@@ -5,15 +5,11 @@ import com.dfmabbas.reactor.engine.EngineController
 
 class Reactor(context: Context) {
 
-    private var appContext: Context? = null;
+    private var appContext: Context = context
+
     private var securityLevel: SecurityLevel? = null
     private var dbName: String? = null;
     private var engineController: EngineController? = null
-
-    init {
-        if (this.appContext == null)
-            this.appContext = context
-    }
 
 
     fun setDatabaseName(name: String): Reactor {
@@ -30,9 +26,9 @@ class Reactor(context: Context) {
         return this
     }
 
-    fun build(): Reactor? {
+    fun build(): Reactor {
         if (dbName == null)
-            dbName = appContext?.packageName?.length.toString()
+            dbName = appContext.packageName?.length.toString()
 
         if (securityLevel == null)
             securityLevel = SecurityLevel.POWERFUL
@@ -40,7 +36,7 @@ class Reactor(context: Context) {
         dbName += "_" + securityLevel.toString()
 
         if (engineController == null)
-            engineController = EngineController(appContext!!, dbName!!, securityLevel!!)
+            engineController = EngineController(appContext, dbName!!, securityLevel!!)
 
         return this
     }

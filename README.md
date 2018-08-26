@@ -19,7 +19,11 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmabbas:reactor:v1.0.1'
+    implementation 'com.github.dfmabbas:reactor:v1.0.2'
+
+    //or //Just use one of these two.
+
+    compile 'com.github.dfmabbas:reactor:v1.0.2'
 }
 ```
 
