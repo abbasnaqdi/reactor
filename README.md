@@ -11,6 +11,10 @@
 
 
 
+##### Note: The password for the `AES` algorithm based on the `sign` key of the target application is made at `runtime` , so the encryption of this library is completely `safe`.
+
+
+
 #### Getting Started :
 
 Add to your root build.gradle :
@@ -26,7 +30,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmabbas:reactor:v1.0.2'
+    implementation 'com.github.dfmabbas:reactor:v1.0.6'
 }
 ```
 
@@ -36,10 +40,7 @@ dependencies {
 
 ##### In `Kotlin`:
 ```Groovy
-reactor = Reactor(context).build()                          
-    //.setDatabaseName("simple_db")	// optional 
-    //.setSecurityLevel(SecurityLevel.POWERFUL)	// optional
-    //.build()                                        
+reactor = Reactor(context, Algorithm.AES)                                 
 
 reactor.put("name", "abbas")
 reactor.put("age", 23)
@@ -56,10 +57,7 @@ reactor.clearAll()
 
 ##### In `Java` :
 ```Groovy
-reactor = new Reactor(getContext()).build();
-    //.setDatabaseName("simple_db")	// optional
-    //.setSecurityLevel(SecurityLevel.POWERFUL)	// optional
-    //.build();
+reactor = new Reactor(view.context, Algorithm.AES);
 
 reactor.put("name", "abbas");
 reactor.put("age", 23);

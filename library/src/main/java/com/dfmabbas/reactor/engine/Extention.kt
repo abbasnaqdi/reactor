@@ -2,7 +2,7 @@ package com.dfmabbas.reactor.engine
 
 import android.content.Context
 
-internal fun <T> getType(value: T): String {
+internal fun <T> getKindScope(value: T): String {
     return when (value) {
         is Boolean -> "bool"
         is String -> "string"

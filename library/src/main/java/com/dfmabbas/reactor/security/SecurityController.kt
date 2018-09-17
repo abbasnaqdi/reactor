@@ -1,67 +1,30 @@
 package com.dfmabbas.reactor.security
 
-import android.util.Base64
-import com.dfmabbas.reactor.handler.SecurityLevel
-import java.security.MessageDigest
+import android.content.Context
+import com.dfmabbas.reactor.engine.EngineController
+import com.dfmabbas.reactor.engine.convertToAny
+import com.dfmabbas.reactor.handler.Algorithm
 
-internal class SecurityController(scope: String) {
-    private var crypt: AESCrypt? = null
-    private var appScope: String? = null
+internal class SecurityController(appContext: Context, alg: Algorithm) {
+    private var engineController = EngineController(appContext, alg.name)
+    private val securityModel = SecurityModel(appContext, alg)
 
-    init {
-        if (crypt == null) crypt = AESCrypt()
-        if (this.appScope == null) this.appScope = getSHA256(scope)
+    internal fun put(key: String, value: Any): Boolean {
+        return engineController.put(key, securityModel.encryptValue(value.toString()), value)
     }
 
-    internal fun encryptValue(key: String, value: String, securityLevel: SecurityLevel): String {
-        return when (securityLevel) {
-            SecurityLevel.POWERFUL -> encryptPowerful(key, value)!!
-            SecurityLevel.FAST -> encryptFast(value)!!
-            SecurityLevel.NONE -> value
-        }
+    internal fun <T> get(key: String, default: T): T {
+        val value = engineController.get(key, default) ?: return default
+        val newValue = securityModel.decryptValue("$value")
+
+        return newValue.convertToAny(default as Any) as T ?: default
     }
 
-    internal fun decryptValue(key: String, value: String, securityLevel: SecurityLevel): String {
-        return when (securityLevel) {
-            SecurityLevel.POWERFUL -> decryptPowerful(key, value)!!
-            SecurityLevel.FAST -> decryptFast(value)!!
-            SecurityLevel.NONE -> value
-        }
+    internal fun remove(key: String, type: Any): Boolean {
+        return engineController.remove(key, type)
     }
 
-     private fun getSHA256(value: String): String {
-        val bytes = value.toByteArray()
-        val md = MessageDigest.getInstance("SHA-256")
-        val digest = md.digest(bytes)
-
-        return digest.fold("") { str, it -> str + "%02x".format(it) }
-    }
-
-    internal fun hashValue(value: String): String? {
-        return getSHA256(value)
-    }
-
-    private fun encryptPowerful(key: String, value: String): String? {
-        val password = getSHA256("$appScope$key")
-        return crypt?.encrypt(password, value)
-    }
-
-    private fun decryptPowerful(key: String, value: String): String? {
-        val password = getSHA256("$appScope$key")
-        return crypt?.decrypt(password, value)
-    }
-
-    private fun encryptFast(value: String): String? {
-        val data = value.toByteArray(Charsets.UTF_8)
-        return Base64.encodeToString(data, Base64.DEFAULT)
-    }
-
-    private fun decryptFast(value: String): String? {
-        val data = Base64.decode(value, Base64.DEFAULT)
-        return String(data, Charsets.UTF_8)
-    }
-
-    private fun getSignature(): String {
-        return ""
+    internal fun clearAll() {
+        engineController.clearAll()
     }
 }

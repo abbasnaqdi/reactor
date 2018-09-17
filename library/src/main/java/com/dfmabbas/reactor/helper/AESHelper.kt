@@ -1,4 +1,4 @@
-package com.dfmabbas.reactor.security
+package com.dfmabbas.reactor.helper
 
 import android.util.Base64
 import java.io.UnsupportedEncodingException
@@ -10,7 +10,7 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
 
-class AESCrypt {
+class AESHelper {
     companion object {
         private const val AES_MODE = "AES/CBC/PKCS7Padding"
         private const val HASH_ALGORITHM = "SHA-256"

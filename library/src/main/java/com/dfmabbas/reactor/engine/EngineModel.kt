@@ -6,24 +6,17 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-internal class EngineModel(context: Context, db_name: String) {
+internal class EngineModel(private val appContext: Context,
+                           private val scope: String) {
 
-    private var appContext: Context? = null
-    private var dbName: String? = null
-    private var pathDir: String? = null
-
-    init {
-        if (this.appContext == null) this.appContext = context
-        if (this.dbName == null) this.dbName = db_name
-        if (pathDir == null) pathDir = appContext?.getPath()
-    }
+    private val path = appContext.getPath()
 
     internal fun makeDatabase(): Boolean {
-        return File(pathDir + dbName).mkdir()
+        return File(path + scope).mkdir()
     }
 
     internal fun makeDocument(name: String): Boolean {
-        val file = File("$pathDir$dbName/$name.json")
+        val file = File("$path$scope/$name.json")
 
         if (file.createNewFile()) {
             return writeJSON(file, JSONObject())
@@ -33,25 +26,25 @@ internal class EngineModel(context: Context, db_name: String) {
     }
 
     internal fun isDatabase(): Boolean {
-        return File(pathDir + dbName).exists()
+        return File(path + scope).exists()
     }
 
     internal fun isDocument(name: String): Boolean {
-        return File("$pathDir$dbName/$name.json").exists()
+        return File("$path$scope/$name.json").exists()
     }
 
     internal fun fetchJSON(name: String): JSONObject {
-        val file = File("$pathDir$dbName/$name.json")
+        val file = File("$path$scope/$name.json")
         return readJSON(file)
     }
 
     internal fun saveJSON(name: String, jsonObject: JSONObject): Boolean {
-        val file = File("$pathDir$dbName/$name.json")
+        val file = File("$path$scope/$name.json")
         return writeJSON(file, jsonObject)
     }
 
     internal fun clearAll(): Boolean {
-        return File(pathDir + dbName).deleteRecursively()
+        return File(path + scope).deleteRecursively()
     }
 
     private fun writeJSON(file: File, jsonObject: JSONObject): Boolean {
