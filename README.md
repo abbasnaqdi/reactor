@@ -57,7 +57,7 @@ reactor.clearAll()
 ##### In `Java` :
 ```Groovy
 reactor = new Reactor(getContext()).build();
-    //.setDatabaseName("simple_db")	/ optional
+    //.setDatabaseName("simple_db")	// optional
     //.setSecurityLevel(SecurityLevel.POWERFUL)	// optional
     //.build();
 
