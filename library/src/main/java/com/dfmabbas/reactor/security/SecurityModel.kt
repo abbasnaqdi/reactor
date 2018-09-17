@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.os.Build
+import android.provider.Settings
 import android.util.Base64
 import com.dfmabbas.reactor.handler.Algorithm
 import com.dfmabbas.reactor.helper.AESHelper
@@ -53,8 +54,8 @@ internal class SecurityModel(private val appContext: Context,
     }
 
     private fun getPassword(): String {
-        val sign = getSign() ?: appContext.packageName
-        return getSHA256(sign) ?: sign
+        val uuid = (getSign() + getUUID())
+        return getSHA256(uuid) ?: uuid
     }
 
     private fun getSHA256(value: String): String? {
@@ -103,5 +104,11 @@ internal class SecurityModel(private val appContext: Context,
         }
 
         return strSign
+    }
+
+    @SuppressLint("HardwareIds")
+    fun getUUID(): String? {
+        return Settings.Secure.getString(appContext.contentResolver,
+                Settings.Secure.ANDROID_ID)
     }
 }

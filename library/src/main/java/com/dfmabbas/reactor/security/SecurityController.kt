@@ -17,7 +17,7 @@ internal class SecurityController(appContext: Context, alg: Algorithm) {
         val value = engineController.get(key, default) ?: return default
         val newValue = securityModel.decryptValue("$value")
 
-        return newValue.convertToAny(default as Any) as T ?: default
+        return newValue.convertToAny(default as Any) as T ?: return default
     }
 
     internal fun remove(key: String, type: Any): Boolean {
