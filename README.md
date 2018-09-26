@@ -11,7 +11,7 @@
 
 
 
-##### Note: The password for the `AES` algorithm based on the `sign` key of the target application is made at `runtime` , so the encryption of this library is completely `safe`.
+##### Note: The password for the `AES` algorithm based on the `sign` key of the target application is made at `runtime` + `Hardware_ID` , so the encryption of this library is completely `safe`.
 
 
 
@@ -30,7 +30,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmabbas:reactor:v1.0.7'
+    implementation 'com.github.dfmabbas:reactor:v1.0.8'
 }
 ```
 

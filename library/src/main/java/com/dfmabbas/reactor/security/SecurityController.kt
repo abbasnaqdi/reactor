@@ -25,11 +25,11 @@ internal class SecurityController(appContext: Context, alg: Algorithm) {
         return newValue.toString().convertToAny(default as Any) as T ?: return default
     }
 
-    internal fun remove(key: String, type: Any): Boolean {
+    fun remove(key: String, type: Any): Boolean {
         return engineController.remove(key, type)
     }
 
-    internal fun clearAll() {
+    fun clearAll() {
         engineController.clearAll()
     }
 }
