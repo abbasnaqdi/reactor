@@ -15,9 +15,14 @@ internal class SecurityController(appContext: Context, alg: Algorithm) {
 
     internal fun <T> get(key: String, default: T): T {
         val value = engineController.get(key, default) ?: return default
-        val newValue = securityModel.decryptValue("$value")
+        val newValue = try {
+            securityModel.decryptValue("$value")
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            default
+        }
 
-        return newValue.convertToAny(default as Any) as T ?: return default
+        return newValue.toString().convertToAny(default as Any) as T ?: return default
     }
 
     internal fun remove(key: String, type: Any): Boolean {
