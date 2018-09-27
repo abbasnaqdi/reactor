@@ -14,16 +14,17 @@ internal fun <T> getKindScope(value: T): String {
     }
 }
 
-internal fun String.convertToAny(type: Any): Any {
-    return when (type) {
-        is Boolean -> this.toBoolean()
-        is Int -> this.toInt()
-        is Long -> this.toLong()
-        is Double -> this.toDouble()
-        is Float -> this.toFloat()
-        is String -> this
+internal fun <T> Any.toT(kind: T): T {
+    val value = this.toString()
+
+    return when (kind) {
+        is Boolean -> value.toBoolean()
+        is Int -> value.toInt()
+        is Long -> value.toLong()
+        is Double -> value.toDouble()
+        is Float -> value.toFloat()
         else -> this
-    }
+    } as T
 }
 
 internal fun Context.getPath(): String {

@@ -37,12 +37,21 @@ class KotlinSample : Fragment() {
         reactor.put("age", 23)
         reactor.put("is_man", true)
 
+        reactor.put("any", this.context!!)
+
+
         val name = reactor.get("name", "")
         val age = reactor.get("age", 1)
         val man = reactor.get("is_man", false)
 
+        val any = reactor.get("bb", this.context)
+
+
         Log.i("name -> ", name)
         Log.i("age -> ", age.toString())
         Log.i("is_man -> ", man.toString())
+
+        Log.i("any -> ", any?.packageName)
+
     }
 }

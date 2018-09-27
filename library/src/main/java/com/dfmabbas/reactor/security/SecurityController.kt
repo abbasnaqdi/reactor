@@ -2,7 +2,7 @@ package com.dfmabbas.reactor.security
 
 import android.content.Context
 import com.dfmabbas.reactor.engine.EngineController
-import com.dfmabbas.reactor.engine.convertToAny
+import com.dfmabbas.reactor.engine.toT
 import com.dfmabbas.reactor.handler.Algorithm
 
 internal class SecurityController(appContext: Context, alg: Algorithm) {
@@ -14,15 +14,21 @@ internal class SecurityController(appContext: Context, alg: Algorithm) {
     }
 
     internal fun <T> get(key: String, default: T): T {
-        val value = engineController.get(key, default) ?: return default
-        val newValue = try {
+        val value: Any? = engineController.get(key, default as Any)
+
+        if (value == null) {
+            put(key, default as Any)
+            return default
+        }
+
+        val newValue: String = try {
             securityModel.decryptValue("$value")
         } catch (ex: Exception) {
             ex.printStackTrace()
-            default
-        }
+            null
+        } ?: return default
 
-        return newValue.toString().convertToAny(default as Any) as T ?: return default
+        return newValue.toT(default as T) ?: default
     }
 
     fun remove(key: String, type: Any): Boolean {

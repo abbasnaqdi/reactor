@@ -1,5 +1,6 @@
 package com.dfmabbas.sample;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,6 +40,7 @@ public class JavaSample extends Fragment {
     }
 
     private void sampleCode() {
+
         reactor.remove("age", 0);
         reactor.clearAll();
 
@@ -46,12 +48,21 @@ public class JavaSample extends Fragment {
         reactor.put("age", 23);
         reactor.put("is_man", true);
 
+        reactor.put("any", this.getContext());
+
+
         String name = reactor.get("name", "");
         Integer age = reactor.get("age", 1);
         Boolean man = reactor.get("is_man", false);
 
+        Context any = reactor.get("bb", this.getContext());
+
+
         Log.i("name -> ", name);
         Log.i("age -> ", age.toString());
         Log.i("is_man -> ", man.toString());
+
+        Log.i("any -> ", any.getPackageName());
+
     }
 }

@@ -47,14 +47,14 @@ internal class EngineController(private val appContext: Context,
         return model.saveJSON(kind, fetchObject)
     }
 
-    internal fun <T> get(key: String, default: T): T? {
+    internal fun get(key: String, default: Any): Any? {
         val kind = getKindScope(default)
         val fetchObject = model.fetchJSON(kind)
 
         if (!fetchObject.has(key))
             return null
 
-        return fetchObject.opt(key) as T
+        return fetchObject.opt(key)
     }
 
     internal fun remove(key: String, type: Any): Boolean {

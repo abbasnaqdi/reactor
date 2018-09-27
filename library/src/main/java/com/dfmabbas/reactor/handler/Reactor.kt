@@ -2,6 +2,7 @@ package com.dfmabbas.reactor.handler
 
 import android.content.Context
 import com.dfmabbas.reactor.security.SecurityController
+import java.io.Serializable
 
 class Reactor(private val appContext: Context, algorithm: Algorithm) {
 
