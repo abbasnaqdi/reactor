@@ -84,10 +84,11 @@ reactor.clearAll();
 #### Advanced API :
 
 ##### In `Kotlin`:
-######[Sample code written with Kotlin](sample/src/main/java/com/dfmabbas/sample/KotlinSample.kt) .
+
+###### [Sample code written with Kotlin](sample/src/main/java/com/dfmabbas/sample/KotlinSample.kt) .
 
 ##### In `Java`:
-######[Sample code written with Java](sample/src/main/java/com/dfmabbas/sample/JavaSample.java) .
+###### [Sample code written with Java](sample/src/main/java/com/dfmabbas/sample/JavaSample.java) .
 
 
 
