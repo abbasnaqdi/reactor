@@ -25,7 +25,7 @@ class Reactor(private val appContext: Context, algorithm: Algorithm) {
         return serializationHelper.deserialize(value)
     }
 
-    fun <T> remove(key: String, type: T): Boolean {
+    fun <T : Serializable> remove(key: String, type: T): Boolean {
         return securityController.remove(key, type)
     }
 

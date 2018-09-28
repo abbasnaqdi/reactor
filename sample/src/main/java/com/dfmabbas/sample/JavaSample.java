@@ -58,7 +58,7 @@ public class JavaSample extends Fragment {
         Log.i("array -> ", String.valueOf(array.length));
         Log.i("tc -> ", tc.getName());
 
-        reactor.remove("age", 0);
-        reactor.clearAll();
+//        reactor.remove("age", 0);
+//        reactor.clearAll();
     }
 }

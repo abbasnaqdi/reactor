@@ -48,8 +48,8 @@ class KotlinSample : Fragment() {
         Log.i("array -> ", array.size.toString())
         Log.i("tc -> ", tc.name)
 
-        reactor.remove("age", 0)
-        reactor.clearAll()
+//        reactor.remove("age", 0)
+//        reactor.clearAll()
 
     }
 }

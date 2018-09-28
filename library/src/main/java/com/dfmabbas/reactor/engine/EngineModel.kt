@@ -28,6 +28,10 @@ internal class EngineModel(private val appContext: Context,
         return File("$path$scope/$name.json").exists()
     }
 
+    internal fun clearAll(): Boolean {
+        return File(path + scope).deleteRecursively()
+    }
+
     internal fun fetchJSON(name: String): JSONObject {
         val file = File("$path$scope/$name.json")
         return readJSON(file)
@@ -36,10 +40,6 @@ internal class EngineModel(private val appContext: Context,
     internal fun saveJSON(name: String, jsonObject: JSONObject): Boolean {
         val file = File("$path$scope/$name.json")
         return writeJSON(file, jsonObject)
-    }
-
-    internal fun clearAll(): Boolean {
-        return File(path + scope).deleteRecursively()
     }
 
     private fun writeJSON(file: File, jsonObject: JSONObject): Boolean {
