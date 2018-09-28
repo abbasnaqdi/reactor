@@ -28,7 +28,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmabbas:reactor:v1.1.0'
+    implementation 'com.github.dfmabbas:reactor:v1.2.0'
 }
 ```
 
@@ -36,24 +36,27 @@ dependencies {
 
 #### Simple API (default) :
 
-##### In `Kotlin`:
+##### In `Kotlin` :
 ```Groovy
-reactor = Reactor(context, Algorithm.AES)                                 
+reactor = Reactor(context, Algorithm.AES)   
+
+// -----------------------------------------------------------
+// reactor.put("key string", any value)
 
 reactor.put("name", "abbas")
 reactor.put("age", 23)
-reactor.put("is_man", true)
+reactor.put("this", this::class.java)
 
-reactor.put("any", this.context!!)
-
+// -----------------------------------------------------------
+// val name = reactor.get("key string", any default value)
 
 val name = reactor.get("name", "")
-val age = reactor.get("age", 1)
-val man = reactor.get("is_man", false)
+val isDay = reactor.get("day", false)
+val thisClass = reactor.get("this", this::class.java)
 
-val any = reactor.get("bb", this.context)
+// -----------------------------------------------------------
 
-reactor.remove("age", 0)
+reactor.remove("day", false)
 reactor.clearAll()
 
 ```
@@ -62,18 +65,21 @@ reactor.clearAll()
 ```Groovy
 reactor = new Reactor(getContext(), Algorithm.AES);
 
+// -----------------------------------------------------------
+// reactor.put("key string", any value);
+
 reactor.put("name", "abbas");
 reactor.put("age", 23);
-reactor.put("is_man", true);
+reactor.put("array", new int[]{0, 0, 0});
 
-reactor.put("any", this.getContext());
-
+// -----------------------------------------------------------
+// variable name = reactor.get("key string", any default value);
 
 String name = reactor.get("name", "");
-Integer age = reactor.get("age", 1);
-Boolean man = reactor.get("is_man", false);
+Integer age = reactor.get("age", 0);
+int[] array = reactor.get("array", new int[]{0, 0, 0});
 
-Context any = reactor.get("bb", this.getContext());
+// -----------------------------------------------------------
 
 reactor.remove("age", 0);
 reactor.clearAll();
