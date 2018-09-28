@@ -1,22 +1,31 @@
 package com.dfmabbas.reactor.handler
 
 import android.content.Context
+import com.dfmabbas.reactor.helper.SerializationHelper
 import com.dfmabbas.reactor.security.SecurityController
 import java.io.Serializable
 
 class Reactor(private val appContext: Context, algorithm: Algorithm) {
-
     private val securityController = SecurityController(appContext, algorithm)
+    private val serializationHelper = SerializationHelper()
 
-    fun put(key: String, value: Any): Boolean {
-        return securityController.put(key, value)
+    fun <T : Serializable> put(key: String, value: T): Boolean {
+        val serializeValue = serializationHelper.serialize(value)
+        return securityController.put(key, serializeValue, value)
     }
 
-    fun <T> get(key: String, default: T): T {
-        return securityController.get(key, default) ?: return default
+    fun <T : Serializable> get(key: String, default: T): T {
+        val value = securityController.get(key, default)
+
+        if (value == null) {
+            put(key, default)
+            return default
+        }
+
+        return serializationHelper.deserialize(value)
     }
 
-    fun remove(key: String, type: Any): Boolean {
+    fun <T> remove(key: String, type: T): Boolean {
         return securityController.remove(key, type)
     }
 

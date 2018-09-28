@@ -1,6 +1,5 @@
 package com.dfmabbas.sample;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,9 +27,7 @@ public class JavaSample extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         reactor = new Reactor(view.getContext(), Algorithm.AES);
-
         view.findViewById(R.id.btn_java_click).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,28 +38,27 @@ public class JavaSample extends Fragment {
 
     private void sampleCode() {
 
-        reactor.remove("age", 0);
-        reactor.clearAll();
-
         reactor.put("name", "abbas");
         reactor.put("age", 23);
         reactor.put("is_man", true);
-
-        reactor.put("any", this.getContext());
+        reactor.put("array", new int[]{1, 2, 3});
+        reactor.put("tc", this.getClass());
 
 
         String name = reactor.get("name", "");
-        Integer age = reactor.get("age", 1);
+        Integer age = reactor.get("age", 0);
         Boolean man = reactor.get("is_man", false);
-
-        Context any = reactor.get("bb", this.getContext());
+        int[] array = reactor.get("array", new int[]{0, 0, 0});
+        Class tc = reactor.get("tc", this.getClass());
 
 
         Log.i("name -> ", name);
         Log.i("age -> ", age.toString());
         Log.i("is_man -> ", man.toString());
+        Log.i("array -> ", String.valueOf(array.length));
+        Log.i("tc -> ", tc.getName());
 
-        Log.i("any -> ", any.getPackageName());
-
+        reactor.remove("age", 0);
+        reactor.clearAll();
     }
 }

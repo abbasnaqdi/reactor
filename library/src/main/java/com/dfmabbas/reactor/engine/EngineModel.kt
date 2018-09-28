@@ -17,12 +17,7 @@ internal class EngineModel(private val appContext: Context,
 
     internal fun makeDocument(name: String): Boolean {
         val file = File("$path$scope/$name.json")
-
-        if (file.createNewFile()) {
-            return writeJSON(file, JSONObject())
-        }
-
-        return false
+        return writeJSON(file, JSONObject("{is:true}"))
     }
 
     internal fun isDatabase(): Boolean {
@@ -48,6 +43,9 @@ internal class EngineModel(private val appContext: Context,
     }
 
     private fun writeJSON(file: File, jsonObject: JSONObject): Boolean {
+        if (jsonObject.length() <= 0)
+            return false
+
         val fileOutputStream = FileOutputStream(file)
 
         fileOutputStream.write(jsonObject.toString().toByteArray())
@@ -62,9 +60,10 @@ internal class EngineModel(private val appContext: Context,
         val buffer = ByteArray(size)
 
         fileInputStream.read(buffer)
-        fileInputStream.close()
 
         val value = String(buffer, Charsets.UTF_8)
+
+        fileInputStream.close()
 
         return JSONObject(value)
     }

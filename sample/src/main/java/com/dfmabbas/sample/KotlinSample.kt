@@ -22,36 +22,34 @@ class KotlinSample : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         reactor = Reactor(view.context, Algorithm.AES)
-
         btn_kotlin_click.setOnClickListener { sampleCode() }
     }
 
     private fun sampleCode() {
 
-        reactor.remove("age", 0)
-        reactor.clearAll()
-
         reactor.put("name", "abbas")
         reactor.put("age", 23)
         reactor.put("is_man", true)
-
-        reactor.put("any", this.context!!)
+        reactor.put("array", arrayOf(2, 3, 4, "6", false))
+        reactor.put("tc", this::class.java)
 
 
         val name = reactor.get("name", "")
-        val age = reactor.get("age", 1)
+        val age = reactor.get("age", 0)
         val man = reactor.get("is_man", false)
-
-        val any = reactor.get("bb", this.context)
+        val array = reactor.get("array", arrayOf<Any>())
+        val tc = reactor.get("class", this::class.java)
 
 
         Log.i("name -> ", name)
         Log.i("age -> ", age.toString())
         Log.i("is_man -> ", man.toString())
+        Log.i("array -> ", array.size.toString())
+        Log.i("tc -> ", tc.name)
 
-        Log.i("any -> ", any?.packageName)
+        reactor.remove("age", 0)
+        reactor.clearAll()
 
     }
 }

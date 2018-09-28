@@ -14,41 +14,39 @@ import java.security.MessageDigest
 
 
 internal class SecurityModel(private val appContext: Context,
-                             private val alg: Algorithm) {
+                             private val algorithm: Algorithm) {
 
     private val crypt = AESHelper()
     private val password = getPassword()
 
     internal fun encryptValue(value: String): String {
-        return when (alg) {
-            Algorithm.AES -> encryptAES(value)!!
-            Algorithm.BASE64 -> encryptBase64(value)!!
+        return when (algorithm) {
+            Algorithm.AES -> encryptAES(value)
             Algorithm.NONE -> value
         }
     }
 
     internal fun decryptValue(value: String): String {
-        return when (alg) {
-            Algorithm.AES -> decryptAES(value)!!
-            Algorithm.BASE64 -> decryptBase64(value)!!
+        return when (algorithm) {
+            Algorithm.AES -> decryptAES(value)
             Algorithm.NONE -> value
         }
     }
 
-    private fun encryptAES(value: String): String? {
+    private fun encryptAES(value: String): String {
         return crypt.encrypt(password, value)
     }
 
-    private fun decryptAES(value: String): String? {
+    private fun decryptAES(value: String): String {
         return crypt.decrypt(password, value)
     }
 
-    private fun encryptBase64(value: String): String? {
+    private fun encryptBase64(value: String): String {
         val data = value.toByteArray(Charsets.UTF_8)
         return Base64.encodeToString(data, Base64.DEFAULT)
     }
 
-    private fun decryptBase64(value: String): String? {
+    private fun decryptBase64(value: String): String {
         val data = Base64.decode(value, Base64.DEFAULT)
         return String(data, Charsets.UTF_8)
     }

@@ -5,7 +5,7 @@ import android.content.Context
 internal class EngineController(private val appContext: Context,
                                 private val scope: String) {
 
-    private var model = EngineModel(appContext, scope)
+    private val model = EngineModel(appContext, scope)
 
     init {
         initEngine()
@@ -33,34 +33,30 @@ internal class EngineController(private val appContext: Context,
             if (!model.isDocument("float"))
                 model.makeDocument("float")
 
-            if (!model.isDocument("unk"))
-                model.makeDocument("unk")
+            if (!model.isDocument("object"))
+                model.makeDocument("object")
         }
     }
 
-    internal fun put(key: String, value: String, type: Any): Boolean {
-        val kind = getKindScope(type)
+    internal fun <T> put(key: String, value: String, type: T): Boolean {
+        val kind = type.getKindScope()
 
         val fetchObject = model.fetchJSON(kind)
-        fetchObject.putOpt(key, value)
+        fetchObject.put(key, value)
 
         return model.saveJSON(kind, fetchObject)
     }
 
-    internal fun get(key: String, default: Any): Any? {
-        val kind = getKindScope(default)
+    internal fun <T> get(key: String, default: T): String? {
+        val kind = default.getKindScope()
         val fetchObject = model.fetchJSON(kind)
-
-        if (!fetchObject.has(key))
-            return null
-
-        return fetchObject.opt(key)
+        return fetchObject.optString(key, null)
     }
 
-    internal fun remove(key: String, type: Any): Boolean {
-        val kind = getKindScope(type)
-        val fetchObject = model.fetchJSON(kind)
+    internal fun <T> remove(key: String, type: T): Boolean {
+        val kind = type.getKindScope()
 
+        val fetchObject = model.fetchJSON(kind)
         if (!fetchObject.has(key))
             return true
 
@@ -71,9 +67,7 @@ internal class EngineController(private val appContext: Context,
 
     internal fun clearAll(): Boolean {
         val result = model.clearAll()
-
         initEngine()
-
         return result
     }
 }
