@@ -5,11 +5,21 @@
 
 
 
-##### `Reactor` is a `fast` and `secure` key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Performance.
+##### `Reactor` is a `fast` and `secure` key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Preferences.
 
-##### `Note`: The password for the `AES` algorithm based on the `sign` key of the target application is made at `runtime` + `Hardware_ID` , so the encryption of this library is completely `safe`.
 
-This library has a `very small size`.
+
+####Features
+
+- **Save and restore a variety of objects ‍`(serialization and decryption)‍`**
+- **`Symmetric` encryption of objects `(signed by target application at runtime + Hardware_ID)`**
+- ‍‍**`Very high performance‍`**
+- **Very low library size `(No need for other libraries)`**
+- **Supported and tested in API-15+ and above**
+- **Minimal and easy to use :‌)**
+- **Save and restore all objects at ‍‍`runtime in` `RAM` (coming soon)**
+- **Imports data from Shared Preferences to Reactor (coming soon)**
+- **Multiprocess support (coming soon)**
 
 
 
