@@ -10,6 +10,7 @@ internal class EngineModel(private val appContext: Context,
                            private val scope: String) {
 
     private val path = appContext.getPath()
+    private val firstDataJson = "{is:true}"
 
     internal fun makeDatabase(): Boolean {
         return File(path + scope).mkdir()
@@ -17,7 +18,7 @@ internal class EngineModel(private val appContext: Context,
 
     internal fun makeDocument(name: String): Boolean {
         val file = File("$path$scope/$name.json")
-        return writeJSON(file, JSONObject("{is:true}"))
+        return writeJSON(file, JSONObject(firstDataJson))
     }
 
     internal fun isDatabase(): Boolean {
@@ -61,9 +62,12 @@ internal class EngineModel(private val appContext: Context,
 
         fileInputStream.read(buffer)
 
-        val value = String(buffer, Charsets.UTF_8)
+        var value = String(buffer, Charsets.UTF_8)
 
         fileInputStream.close()
+
+        if (value.isEmpty())
+            value = firstDataJson
 
         return JSONObject(value)
     }

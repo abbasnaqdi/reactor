@@ -50,6 +50,5 @@ class KotlinSample : Fragment() {
 
 //        reactor.remove("age", 0)
 //        reactor.clearAll()
-
     }
 }
