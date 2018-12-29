@@ -5,8 +5,8 @@ import com.dfmabbas.reactor.helper.SerializationHelper
 import com.dfmabbas.reactor.security.SecurityController
 import java.io.Serializable
 
-class Reactor(private val appContext: Context, algorithm: Algorithm) {
-    private val securityController = SecurityController(appContext, algorithm)
+class Reactor(private val appContext: Context, isCryptography: Boolean) {
+    private val securityController = SecurityController(appContext, isCryptography)
     private val serializationHelper = SerializationHelper()
 
     fun <T : Serializable> put(key: String, value: T): Boolean {

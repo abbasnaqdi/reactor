@@ -2,10 +2,9 @@ package com.dfmabbas.reactor.security
 
 import android.content.Context
 import com.dfmabbas.reactor.engine.EngineController
-import com.dfmabbas.reactor.handler.Algorithm
 import java.io.Serializable
 
-internal class SecurityController(appContext: Context, algorithm: Algorithm) {
+internal class SecurityController(appContext: Context, isCryptography: Boolean) {
     private var engineController = EngineController(appContext, algorithm.name)
     private val securityModel = SecurityModel(appContext, algorithm)
 

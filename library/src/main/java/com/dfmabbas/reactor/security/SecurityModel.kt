@@ -8,7 +8,6 @@ import android.content.pm.Signature
 import android.os.Build
 import android.provider.Settings
 import android.util.Base64
-import com.dfmabbas.reactor.handler.Algorithm
 import com.dfmabbas.reactor.helper.AESHelper
 import java.security.MessageDigest
 

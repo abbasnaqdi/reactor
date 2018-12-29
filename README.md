@@ -12,17 +12,16 @@
 
 #### Features
 
-- `Save and restore a variety of objects ‍(serialization and deserialization)‍`
-- `Symmetric encryption of objects (signed by target application at runtime + Hardware_ID)` 
-- `‍Very high performance‍`
-- `Very low library size (No need for other libraries)`
-- `Supported and tested in API 15 and above`
-- `Minimal and easy to use :‌)`
-- `Save and restore all objects at ‍‍runtime in RAM (coming soon)`
-- `Imports data from Shared Preferences to Reactor (coming soon)`
-- `Multiprocess support (coming soon)`
-
-
+- [x] Save and restore a variety of objects (serialization and deserialization)
+- [x] Symmetric encryption of objects (signed by target application at runtime + Hardware_ID)
+- [x] Very high performance‍
+- [x] Very low library size (No need for other libraries)
+- [x] Supported and tested in API 15 and above
+- [x] Minimal and easy to use :)
+- [ ] Save and restore all objects at runtime in RAM
+- [ ] Add a data branch (branches can be independent of the main branch) 
+- [ ] Imports data from Shared Preferences to Reactor
+- [ ] Multiprocess support
 
 #### Getting Started :
 
@@ -54,14 +53,12 @@ dependencies {
 reactor = Reactor(context, Algorithm.AES)   
 
 // -----------------------------------------------------------
-// reactor.put("key string", any value)
 
 reactor.put("name", "abbas")
 reactor.put("age", 23)
 reactor.put("this", this::class.java)
 
 // -----------------------------------------------------------
-// val name = reactor.get("key string", any default value)
 
 val name = reactor.get("name", "")
 val isDay = reactor.get("day", false)
@@ -80,14 +77,12 @@ reactor.clearAll()
 reactor = new Reactor(getContext(), Algorithm.AES);
 
 // -----------------------------------------------------------
-// reactor.put("key string", any value);
 
 reactor.put("name", "abbas");
 reactor.put("age", 23);
 reactor.put("array", new int[]{0, 0, 0});
 
 // -----------------------------------------------------------
-// variable name = reactor.get("key string", any default value);
 
 String name = reactor.get("name", "");
 Integer age = reactor.get("age", 0);
