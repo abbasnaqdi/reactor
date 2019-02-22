@@ -4,12 +4,12 @@ import android.content.Context
 import com.dfmabbas.reactor.engine.EngineController
 import java.io.Serializable
 
-internal class SecurityController(appContext: Context, isCryptography: Boolean) {
-    private var engineController = EngineController(appContext, algorithm.name)
-    private val securityModel = SecurityModel(appContext, algorithm)
+internal class SecurityController(appContext: Context, private val isEncrypt: Boolean) {
+    private var engineController = EngineController(appContext, if (isEncrypt) "AES" else "NONE")
+    private val securityModel = SecurityModel(appContext, isEncrypt)
 
     internal fun <T : Serializable> put(key: String, value: String, type: T): Boolean {
-        val encryptValue = securityModel.encryptValue(value.toString())
+        val encryptValue = securityModel.encryptValue(value)
         return engineController.put(key, encryptValue, type)
     }
 

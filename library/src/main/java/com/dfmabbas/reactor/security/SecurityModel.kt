@@ -12,24 +12,20 @@ import com.dfmabbas.reactor.helper.AESHelper
 import java.security.MessageDigest
 
 
-internal class SecurityModel(private val appContext: Context,
-                             private val algorithm: Algorithm) {
+internal class SecurityModel(
+    private val appContext: Context,
+    private val isEncrypt: Boolean
+) {
 
     private val crypt = AESHelper()
     private val password = getPassword()
 
     internal fun encryptValue(value: String): String {
-        return when (algorithm) {
-            Algorithm.AES -> encryptAES(value)
-            Algorithm.NONE -> value
-        }
+        return if (isEncrypt) encryptAES(value) else value
     }
 
     internal fun decryptValue(value: String): String {
-        return when (algorithm) {
-            Algorithm.AES -> decryptAES(value)
-            Algorithm.NONE -> value
-        }
+        return if (isEncrypt) decryptAES(value) else value
     }
 
     private fun encryptAES(value: String): String {
@@ -38,16 +34,6 @@ internal class SecurityModel(private val appContext: Context,
 
     private fun decryptAES(value: String): String {
         return crypt.decrypt(password, value)
-    }
-
-    private fun encryptBase64(value: String): String {
-        val data = value.toByteArray(Charsets.UTF_8)
-        return Base64.encodeToString(data, Base64.DEFAULT)
-    }
-
-    private fun decryptBase64(value: String): String {
-        val data = Base64.decode(value, Base64.DEFAULT)
-        return String(data, Charsets.UTF_8)
     }
 
     private fun getPassword(): String {
@@ -78,12 +64,14 @@ internal class SecurityModel(private val appContext: Context,
 
             if (Build.VERSION.SDK_INT >= 28) {
                 packageInfo = appContext.packageManager
-                        .getPackageInfo(appContext.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+                    .getPackageInfo(appContext.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
                 signatures = packageInfo?.signingInfo?.apkContentsSigners
             } else {
                 packageInfo = appContext.packageManager
-                        .getPackageInfo(appContext.packageName,
-                                PackageManager.GET_SIGNATURES)
+                    .getPackageInfo(
+                        appContext.packageName,
+                        PackageManager.GET_SIGNATURES
+                    )
 
                 signatures = packageInfo?.signatures
             }
@@ -105,7 +93,9 @@ internal class SecurityModel(private val appContext: Context,
 
     @SuppressLint("HardwareIds")
     fun getUUID(): String? {
-        return Settings.Secure.getString(appContext.contentResolver,
-                Settings.Secure.ANDROID_ID)
+        return Settings.Secure.getString(
+            appContext.contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
     }
 }

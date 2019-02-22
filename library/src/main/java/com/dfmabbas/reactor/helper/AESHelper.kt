@@ -11,11 +11,13 @@ import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
 
 class AESHelper {
-    companion object {
-        private const val AES_MODE = "AES/CBC/PKCS7Padding"
-        private const val HASH_ALGORITHM = "SHA-256"
-        private val ivBytes = byteArrayOf(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
-    }
+
+    private val AES_MODE = "AES/CBC/PKCS7Padding"
+    private val HASH_ALGORITHM = "SHA-256"
+    private val ivBytes = byteArrayOf(
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    )
 
     @Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
     private fun generateKey(password: String): SecretKeySpec {
@@ -37,7 +39,6 @@ class AESHelper {
             e.printStackTrace()
             throw GeneralSecurityException(e)
         }
-
     }
 
     @Throws(GeneralSecurityException::class)
@@ -74,7 +75,8 @@ class AESHelper {
     }
 
     private fun bytesToHex(bytes: ByteArray): String {
-        val hexArray = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
+        val hexArray = charArrayOf('0', '1', '2', '3', '4', '5', '6',
+            '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
         val hexChars = CharArray(bytes.size * 2)
         var v: Int
         for (j in bytes.indices) {

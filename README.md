@@ -1,32 +1,30 @@
-### `Reactor`
+##### `Reactor`
 
 [![](https://jitpack.io/v/dfmabbas/reactor.svg)](https://jitpack.io/#dfmAbbas/reactor)
 [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/dfmabbas/reactor)
 [![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/dfmabbas/reactor)
 
+**Reactor** is a `fast` and `secure` key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Preferences.
 
 
-##### `Reactor` is a `fast` and `secure` key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Preferences.
+##### Features
+- [x] `Save and restore a variety of objects (serialization and deserialization)`
+- [x] `Symmetric encryption of objects (signed by target application at runtime + Hardware_ID)`
+- [x] `Very high performance‍`
+- [x] `Very low library size (No need for other libraries)`
+- [x] `Supported and tested in API 15 and above`
+- [x] `Minimal and easy to use :)`
+- [ ] `Save and restore all objects at runtime in RAM`
+- [ ] `Add a data branch (branches can be independent of the main branch) `
+- [ ] `Imports data from Shared Preferences to Reactor`
+- [ ] `Multiprocess support`
 
 
 
-#### Features
 
-- [x] Save and restore a variety of objects (serialization and deserialization)
-- [x] Symmetric encryption of objects (signed by target application at runtime + Hardware_ID)
-- [x] Very high performance‍
-- [x] Very low library size (No need for other libraries)
-- [x] Supported and tested in API 15 and above
-- [x] Minimal and easy to use :)
-- [ ] Save and restore all objects at runtime in RAM
-- [ ] Add a data branch (branches can be independent of the main branch) 
-- [ ] Imports data from Shared Preferences to Reactor
-- [ ] Multiprocess support
-
-#### Getting Started :
+##### Getting Started :
 
 Add to your root build.gradle :
-
 ```Groovy
 allprojects {
   repositories {
@@ -35,8 +33,8 @@ allprojects {
   }
 ```
 
-Add the dependency :
 
+Add the dependency :
 ```Groovy
 dependencies {
     implementation 'com.github.dfmabbas:reactor:v1.2.1'
@@ -45,9 +43,9 @@ dependencies {
 
 
 
-#### Simple API (default) :
+##### Simple API (default) :
 
-##### In `Kotlin` :
+In `Kotlin` :
 
 ```Groovy
 reactor = Reactor(context, Algorithm.AES)   
@@ -68,10 +66,11 @@ val thisClass = reactor.get("this", this::class.java)
 
 reactor.remove("day", false)
 reactor.clearAll()
-
 ```
 
-##### In `Java` :
+
+
+In `Java` :
 
 ```Groovy
 reactor = new Reactor(getContext(), Algorithm.AES);
@@ -96,20 +95,15 @@ reactor.clearAll();
 
 
 
-#### Advanced API :
+##### Advanced API :
 
-##### In `Kotlin`:
+In `Kotlin`: [sample code written with Kotlin](sample/src/main/java/com/dfmabbas/sample/KotlinSample.kt) .
 
-###### [Sample code written with Kotlin](sample/src/main/java/com/dfmabbas/sample/KotlinSample.kt) .
-
-##### In `Java`:
-
-###### [Sample code written with Java](sample/src/main/java/com/dfmabbas/sample/JavaSample.java) .
+In `Java`: [sample code written with Java](sample/src/main/java/com/dfmabbas/sample/JavaSample.java) .
 
 
 
-#### License
-
+##### License
 ```
 MIT License
 
@@ -131,6 +125,5 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE
 ```
-
