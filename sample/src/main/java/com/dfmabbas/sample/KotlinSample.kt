@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_kotlin_sample.*
 
 class KotlinSample : Fragment() {
 
-    private val reactor = Reactor(context!!)
+    private lateinit var reactor: Reactor
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +27,11 @@ class KotlinSample : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btn_kotlin_click.setOnClickListener { sampleCode() }
+        reactor = Reactor(view.context)
+
+        btn_kotlin_click.setOnClickListener {
+            sampleCode()
+        }
     }
 
     private fun sampleCode() {

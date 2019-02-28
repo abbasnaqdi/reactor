@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class JavaSample extends Fragment {
 
-    private Reactor reactor = new Reactor(getContext());
+    private Reactor reactor;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater,
@@ -26,7 +26,10 @@ public class JavaSample extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.btn_java_click).setOnClickListener(view1 -> sampleCode());
+        reactor = new Reactor(view.getContext());
+
+        view.findViewById(R.id.btn_java_click)
+                .setOnClickListener(v -> sampleCode());
     }
 
     private void sampleCode() {

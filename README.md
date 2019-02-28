@@ -17,7 +17,6 @@
 - [ ] `Save and restore all objects at runtime in RAM`
 - [ ] `Add a data branch (branches can be independent of the main branch) `
 - [ ] `Imports data from Shared Preferences to Reactor`
-- [ ] `Multiprocess support`
 
 
 
@@ -28,6 +27,7 @@ Add to your root build.gradle :
 ```Groovy
 allprojects {
   repositories {
+      ...
       maven { url 'https://jitpack.io' }
     }
   }
@@ -37,7 +37,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmabbas:reactor:v1.2.1'
+    implementation 'com.github.dfmabbas:reactor:v1.2.3'
 }
 ```
 
@@ -48,21 +48,22 @@ dependencies {
 In `Kotlin` :
 
 ```Groovy
-reactor = Reactor(context, Algorithm.AES)   
+reactor = Reactor(context)
+reactor = Reactor(context, false) // disable encryption
 
-// -----------------------------------------------------------
+-----------------------------------------------------------
 
 reactor.put("name", "abbas")
 reactor.put("age", 23)
 reactor.put("this", this::class.java)
 
-// -----------------------------------------------------------
+-----------------------------------------------------------
 
 val name = reactor.get("name", "")
 val isDay = reactor.get("day", false)
 val thisClass = reactor.get("this", this::class.java)
 
-// -----------------------------------------------------------
+-----------------------------------------------------------
 
 reactor.remove("day", false)
 reactor.clearAll()
@@ -73,21 +74,22 @@ reactor.clearAll()
 In `Java` :
 
 ```Groovy
-reactor = new Reactor(getContext(), Algorithm.AES);
+reactor = new Reactor(getContext());
+reactor = new Reactor(getContext(), false); // disable encryption
 
-// -----------------------------------------------------------
+-----------------------------------------------------------
 
 reactor.put("name", "abbas");
 reactor.put("age", 23);
 reactor.put("array", new int[]{0, 0, 0});
 
-// -----------------------------------------------------------
+-----------------------------------------------------------
 
 String name = reactor.get("name", "");
 Integer age = reactor.get("age", 0);
 int[] array = reactor.get("array", new int[]{0, 0, 0});
 
-// -----------------------------------------------------------
+-----------------------------------------------------------
 
 reactor.remove("age", 0);
 reactor.clearAll();
@@ -107,7 +109,7 @@ In `Java`: [sample code written with Java](sample/src/main/java/com/dfmabbas/sam
 ```
 MIT License
 
-Copyright (c) 2018 Abbas Naghdi (@dfmabbas)
+Copyright (c) 2018 Abbas Naqdi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
