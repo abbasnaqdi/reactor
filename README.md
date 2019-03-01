@@ -48,8 +48,8 @@ dependencies {
 In `Kotlin` :
 
 ```Groovy
-reactor = Reactor(context)
-reactor = Reactor(context, false) // disable encryption
+val reactor = Reactor(context)
+val reactor = Reactor(context, false) // disable encryption
 
 -----------------------------------------------------------
 
@@ -74,8 +74,8 @@ reactor.clearAll()
 In `Java` :
 
 ```Groovy
-reactor = new Reactor(getContext());
-reactor = new Reactor(getContext(), false); // disable encryption
+Reactor reactor = new Reactor(getContext());
+Reactor reactor = new Reactor(getContext(), false); // disable encryption
 
 -----------------------------------------------------------
 
