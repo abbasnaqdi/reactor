@@ -75,8 +75,10 @@ class AESHelper {
     }
 
     private fun bytesToHex(bytes: ByteArray): String {
-        val hexArray = charArrayOf('0', '1', '2', '3', '4', '5', '6',
-            '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
+        val hexArray = charArrayOf(
+            '0', '1', '2', '3', '4', '5', '6',
+            '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+        )
         val hexChars = CharArray(bytes.size * 2)
         var v: Int
         for (j in bytes.indices) {

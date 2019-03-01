@@ -3,8 +3,10 @@ package com.dfmabbas.reactor.engine
 import android.content.Context
 import java.io.Serializable
 
-internal class EngineController(private val appContext: Context,
-                                private val scope: String) {
+internal class EngineController(
+    private val appContext: Context,
+    private val scope: String
+) {
 
     private val model = EngineModel(appContext, scope)
 

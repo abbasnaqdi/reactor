@@ -6,8 +6,10 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-internal class EngineModel(private val appContext: Context,
-                           private val scope: String) {
+internal class EngineModel(
+    private val appContext: Context,
+    private val scope: String
+) {
 
     private val path = appContext.getPath()
     private val firstDataJson = "{is:true}"
