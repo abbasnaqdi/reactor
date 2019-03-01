@@ -37,7 +37,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmabbas:reactor:v1.2.3'
+    implementation 'com.github.dfmabbas:reactor:v1.2.4'
 }
 ```
 
