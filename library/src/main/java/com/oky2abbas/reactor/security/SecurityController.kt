@@ -1,7 +1,7 @@
-package com.dfmabbas.reactor.security
+package com.oky2abbas.reactor.security
 
 import android.content.Context
-import com.dfmabbas.reactor.engine.EngineController
+import com.oky2abbas.reactor.engine.EngineController
 import java.io.Serializable
 
 internal class SecurityController(appContext: Context, private val isEncrypt: Boolean) {

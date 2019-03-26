@@ -5,13 +5,13 @@ apply plugin: 'kotlin-android-extensions'
 def mini_api = 15
 def compile_api = 28
 def target_api = 28
-def version_code = 124
-def version_name = '1.2.4'
+def version_code = 125
+def version_name = '1.2.5'
 
 android {
     compileSdkVersion compile_api
     defaultConfig {
-        applicationId "com.dfmabbas.sample"
+        applicationId "com.oky2abbas.sample"
         minSdkVersion mini_api
         targetSdkVersion target_api
         versionCode version_code

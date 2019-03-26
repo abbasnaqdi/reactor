@@ -8,14 +8,14 @@
 
     <fragment
             android:id="@+id/kotlin_sample"
-            class="com.dfmabbas.sample.KotlinSample"
+            class="com.oky2abbas.sample.KotlinSample"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
 
     <fragment
             android:id="@+id/java_sample"
-            class="com.dfmabbas.sample.JavaSample"
+            class="com.oky2abbas.sample.JavaSample"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"/>

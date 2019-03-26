@@ -1,4 +1,4 @@
-package com.dfmabbas.sample;
+package com.oky2abbas.sample;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.dfmabbas.reactor.handler.Reactor;
+import com.oky2abbas.reactor.handler.Reactor;
 import org.jetbrains.annotations.NotNull;
 
 

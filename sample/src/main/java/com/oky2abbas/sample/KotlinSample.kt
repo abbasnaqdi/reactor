@@ -1,4 +1,4 @@
-package com.dfmabbas.sample
+package com.oky2abbas.sample
 
 
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.dfmabbas.reactor.handler.Reactor
+import com.oky2abbas.reactor.handler.Reactor
 import kotlinx.android.synthetic.main.fragment_kotlin_sample.*
 
 

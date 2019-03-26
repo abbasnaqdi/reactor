@@ -1,8 +1,8 @@
 ##### `Reactor`
 
-[![](https://jitpack.io/v/dfmabbas/reactor.svg)](https://jitpack.io/#dfmAbbas/reactor)
-[![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/dfmabbas/reactor)
-[![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/dfmabbas/reactor)
+[![](https://jitpack.io/v/oky2abbas/reactor.svg)](https://jitpack.io/#dfmAbbas/reactor)
+[![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/oky2abbas/reactor)
+[![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/oky2abbas/reactor)
 
 **Reactor** is a `fast` and `secure` key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Preferences.
 
@@ -37,7 +37,7 @@ allprojects {
 Add the dependency :
 ```Groovy
 dependencies {
-    implementation 'com.github.dfmabbas:reactor:v1.2.4'
+    implementation 'com.github.oky2abbas:reactor:v1.2.5'
 }
 ```
 
@@ -99,9 +99,9 @@ reactor.clearAll();
 
 ##### Advanced API :
 
-In `Kotlin`: [sample code written with Kotlin](sample/src/main/java/com/dfmabbas/sample/KotlinSample.kt) .
+In `Kotlin`: [sample code written with Kotlin](sample/src/main/java/com/oky2abbas/sample/KotlinSample.kt) .
 
-In `Java`: [sample code written with Java](sample/src/main/java/com/dfmabbas/sample/JavaSample.java) .
+In `Java`: [sample code written with Java](sample/src/main/java/com/oky2abbas/sample/JavaSample.java) .
 
 
 

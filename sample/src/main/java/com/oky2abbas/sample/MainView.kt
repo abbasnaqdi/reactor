@@ -1,4 +1,4 @@
-package com.dfmabbas.sample
+package com.oky2abbas.sample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
