@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/kotlin_sample"
+        class="com.oky2abbas.sample.KotlinSample"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_weight="1" />
 
     <fragment
-            android:id="@+id/kotlin_sample"
-            class="com.oky2abbas.sample.KotlinSample"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-    <fragment
-            android:id="@+id/java_sample"
-            class="com.oky2abbas.sample.JavaSample"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+        android:id="@+id/java_sample"
+        class="com.oky2abbas.sample.JavaSample"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

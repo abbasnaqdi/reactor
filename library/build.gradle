@@ -1,34 +1,30 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-def mini_api = 15
-def compile_api = 28
-def target_api = 28
-def version_code = 124
-def version_name = '1.2.4'
-
 android {
-    compileSdkVersion compile_api
+    compileSdkVersion targetV
+
     defaultConfig {
-        minSdkVersion mini_api
-        targetSdkVersion target_api
-        versionCode version_code
-        versionName version_name
+        minSdkVersion minV
+        targetSdkVersion targetV
+        versionCode vCode
+        versionName vName
         resConfig "en"
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinV"
 }

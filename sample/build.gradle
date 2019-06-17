@@ -2,37 +2,32 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-def mini_api = 15
-def compile_api = 28
-def target_api = 28
-def version_code = 125
-def version_name = '1.2.5'
-
 android {
-    compileSdkVersion compile_api
+    compileSdkVersion targetV
     defaultConfig {
         applicationId "com.oky2abbas.sample"
-        minSdkVersion mini_api
-        targetSdkVersion target_api
-        versionCode version_code
-        versionName version_name
+        minSdkVersion minV
+        targetSdkVersion targetV
+        versionCode vCode
+        versionName vName
         resConfig "en"
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation project(':library')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinV"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation project(':library')
 }

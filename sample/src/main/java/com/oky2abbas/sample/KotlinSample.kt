@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.oky2abbas.reactor.handler.Reactor
-import kotlinx.android.synthetic.main.fragment_kotlin_sample.*
+import kotlinx.android.synthetic.main.kotlin_view.*
 
 
 class KotlinSample : Fragment() {
@@ -20,7 +20,7 @@ class KotlinSample : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(
-            R.layout.fragment_kotlin_sample,
+            R.layout.kotlin_view,
             container, false
         )
     }

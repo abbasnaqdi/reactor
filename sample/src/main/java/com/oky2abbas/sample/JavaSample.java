@@ -19,7 +19,7 @@ public class JavaSample extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_java_sample,
+        return inflater.inflate(R.layout.java_view,
                 container, false);
     }
 

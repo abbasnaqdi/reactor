@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">dfmSecureKV</string>
+    <string name="str_app_name">reactor</string>
 
     <string name="str_kotlin">kotlin : check logcat</string>
     <string name="str_java">java : check log cat</string>
