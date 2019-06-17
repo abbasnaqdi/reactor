@@ -1,6 +1,5 @@
 <resources>
-    <string name="str_app_name">reactor</string>
-
-    <string name="str_kotlin">kotlin : check logcat</string>
-    <string name="str_java">java : check log cat</string>
+    <string name="str_app_name">reactor :)</string>
+    <string name="str_print">print :)</string>
+    <string name="str_print_hint">It will be printed here :)</string>
 </resources>

@@ -6,24 +6,30 @@
 
 **Reactor** is a `fast` and `secure` key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Preferences.
 
+##### Features + Road map
 
-##### Features
+###### First Edition 1.x.x
+
 - [x] `Save and restore a variety of objects (serialization and deserialization)`
-- [x] `Symmetric encryption of objects (signed by target application at runtime + Hardware_ID)`
-- [x] `Very high performance‍`
-- [x] `Very low library size (No need for other libraries)`
-- [x] `Supported and tested in API 15 and above`
-- [x] `Minimal and easy to use :)`
+- [ ] `Symmetric encryption of objects (signed by target application at runtime + Hardware_ID)`
+- [ ] `Very high performance‍`
+- [ ] `Very low library size (No need for other libraries)`
+- [ ] `Supported and tested in API 15 and above`
+- [ ] `Minimal and easy to use :)`
+
+###### Second Edition 2.x.x
+
 - [ ] `Save and restore all objects at runtime in RAM`
 - [ ] `Add a data branch (branches can be independent of the main branch) `
 - [ ] `Imports data from Shared Preferences to Reactor`
-
-
-
+- [ ] ‍‍`Change the underlying AES password generation`
+- [ ] `Change the storage infrastructure`
+- [ ] ‍‍‍`Add concurrency + thread-safe functionality`
 
 ##### Getting Started :
 
-Add to your root build.gradle :
+Add to your root build.gradle :Ï
+
 ```Groovy
 allprojects {
   repositories {
@@ -33,15 +39,13 @@ allprojects {
   }
 ```
 
-
 Add the dependency :
+
 ```Groovy
 dependencies {
     implementation 'com.github.oky2abbas:reactor:v1.2.5'
 }
 ```
-
-
 
 ##### Simple API (default) :
 
@@ -69,8 +73,6 @@ reactor.remove("day", false)
 reactor.clearAll()
 ```
 
-
-
 In `Java` :
 
 ```Groovy
@@ -97,19 +99,24 @@ reactor.clearAll();
 
 
 
-##### Advanced API :
+##### FAQ :
 
-In `Kotlin`: [sample code written with Kotlin](sample/src/main/java/com/oky2abbas/sample/KotlinSample.kt) .
+**Need more help?**
 
-In `Java`: [sample code written with Java](sample/src/main/java/com/oky2abbas/sample/JavaSample.java) .
+- [Check out the classes in this folder](sample/src/main/java/com/oky2abbas/sample)
+
+ **How to store and restore the custom class ?**
+
+- [See this issue : #1](https://github.com/oky2abbas/reactor/issues/1)
 
 
 
 ##### License
+
 ```
 MIT License
 
-Copyright (c) 2018 Abbas Naqdi
+Copyright (c) 2018 amir abbas naqdi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
