@@ -11,11 +11,11 @@
 ###### First Edition 1.x.x
 
 - [x] `Save and restore a variety of objects (serialization and deserialization)`
-- [ ] `Symmetric encryption of objects (signed by target application at runtime + Hardware_ID)`
-- [ ] `Very high performance‍`
-- [ ] `Very low library size (No need for other libraries)`
-- [ ] `Supported and tested in API 15 and above`
-- [ ] `Minimal and easy to use :)`
+- [x] `Symmetric encryption of objects (signed by target application at runtime + Hardware_ID)`
+- [x] `Very high performance‍`
+- [x] `Very low library size (No need for other libraries)`
+- [x] `Supported and tested in API 15 and above`
+- [x] `Minimal and easy to use :)`
 
 ###### Second Edition 2.x.x
 
