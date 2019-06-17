@@ -15,7 +15,6 @@
         android:gravity="start|center_vertical"
         android:hint="@string/str_print_hint"
         android:padding="8dp"
-        android:textColor="@color/colorAccent"
         android:textStyle="bold|normal" />
 
     <androidx.appcompat.widget.AppCompatButton
