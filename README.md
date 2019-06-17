@@ -101,11 +101,11 @@ reactor.clearAll();
 
 ##### FAQ :
 
-**Need more help?**
+###### Need more help?
 
 - [Check out the classes in this folder](sample/src/main/java/com/oky2abbas/sample)
 
- **How to store and restore the custom class ?**
+###### How to store and restore the custom class ?
 
 - [See this issue : #1](https://github.com/oky2abbas/reactor/issues/1)
 
