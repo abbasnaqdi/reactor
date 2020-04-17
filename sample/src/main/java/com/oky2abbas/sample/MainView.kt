@@ -1,7 +1,6 @@
 package com.oky2abbas.sample
 
 import android.os.Bundle
-import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import com.oky2abbas.reactor.handler.Reactor
 import kotlinx.android.synthetic.main.main_view.*
@@ -28,7 +27,7 @@ class MainView : AppCompatActivity() {
         clickListener()
     }
 
-    private fun clickListener() = _btnPrint.setOnClickListener {
+    private fun clickListener() = btnPrint.setOnClickListener {
         handler.add()
         handler.edit()
 
@@ -38,6 +37,6 @@ class MainView : AppCompatActivity() {
     }
 
     private fun print(text: String) {
-        _txtPrint.text = text
+        txtPrint.text = text
     }
 }

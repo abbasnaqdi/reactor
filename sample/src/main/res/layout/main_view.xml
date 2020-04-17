@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/_txtPrint"
+        android:id="@+id/txtPrint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -18,7 +18,7 @@
         android:textStyle="bold|normal" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/_btnPrint"
+        android:id="@+id/btnPrint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -26,6 +26,14 @@
 - [ ] `Change the storage infrastructure`
 - [ ] ‍‍‍`Add concurrency + thread-safe functionality`
 
+
+
+[![Donate](https://img.shields.io/badge/Donate-IRAN-green)](https://idpay.ir/oky2abbas)
+<br>**Funding for faster development**  (`only works with IRAN bank cards`)
+<br>**Payment gateway**: https://idpay.ir/oky2abbas
+
+
+
 ##### Getting Started :
 
 Add to your root build.gradle :Ï
@@ -97,8 +105,6 @@ reactor.remove("age", 0);
 reactor.clearAll();
 ```
 
-
-
 ##### FAQ :
 
 ###### Need more help?
@@ -109,14 +115,12 @@ reactor.clearAll();
 
 - [See this issue : #1](https://github.com/oky2abbas/reactor/issues/1)
 
-
-
 ##### License
 
 ```
 MIT License
 
-Copyright (c) 2018 amir abbas naqdi
+Copyright (c) 2020  abbas naqdi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
