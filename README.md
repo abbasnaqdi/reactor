@@ -28,9 +28,11 @@
 
 
 
-[![Donate](https://img.shields.io/badge/Donate-IRAN-green)](https://idpay.ir/oky2abbas)
-<br>**Funding for faster development**  (`only works with IRAN bank cards`)
-<br>**Payment gateway**: https://idpay.ir/oky2abbas
+[![Donate](https://img.shields.io/badge/Donate-green)](https://idpay.ir/oky2abbas)
+
+**Bitcoin (BTC) Address: `bc1qhgvnx2nfzr0qep5fnsevyyn59k32wpe7q0c7nh`**
+
+**Ethereum (ETH) Address: `0x0dA44bbcc2d7BBF11eb070A81CB24c4eE7Bf1AD9`**
 
 
 
@@ -38,7 +40,7 @@
 
 Add to your root build.gradle :Ï
 
-```Groovy
+```java
 allprojects {
   repositories {
       ...
@@ -49,7 +51,7 @@ allprojects {
 
 Add the dependency :
 
-```Groovy
+```java
 dependencies {
     implementation 'com.github.oky2abbas:reactor:v1.2.5'
 }
@@ -59,7 +61,7 @@ dependencies {
 
 In `Kotlin` :
 
-```Groovy
+```java
 val reactor = Reactor(context)
 val reactor = Reactor(context, false) // disable encryption
 
@@ -83,7 +85,7 @@ reactor.clearAll()
 
 In `Java` :
 
-```Groovy
+```java
 Reactor reactor = new Reactor(getContext());
 Reactor reactor = new Reactor(getContext(), false); // disable encryption
 
