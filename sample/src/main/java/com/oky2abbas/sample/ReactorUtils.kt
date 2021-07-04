@@ -4,7 +4,7 @@ package com.oky2abbas.sample
 import com.oky2abbas.reactor.handler.Reactor
 
 
-class Handler(private val reactor: Reactor) {
+class ReactorUtils(private val reactor: Reactor) {
     fun add() {
         reactor.put("name", "abbas")
         reactor.put("age", null)

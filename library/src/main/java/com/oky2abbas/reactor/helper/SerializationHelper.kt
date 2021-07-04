@@ -5,6 +5,7 @@ import android.util.Base64InputStream
 import android.util.Base64OutputStream
 import java.io.*
 
+
 class SerializationHelper {
     fun <T : Serializable> serialize(data: T): String {
         val outputStream = ByteArrayOutputStream()

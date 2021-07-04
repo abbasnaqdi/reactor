@@ -27,7 +27,7 @@ class SecurityController(appContext: Context, isEncrypt: Boolean) {
         return engineController.remove(keys, typeName)
     }
 
-    fun eraseAllData() {
+    internal fun eraseAllData() {
         engineController.eraseAllData()
     }
 }

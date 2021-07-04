@@ -92,7 +92,7 @@ internal class SecurityModel(
     }
 
     @SuppressLint("HardwareIds")
-    fun getUUID(): String? {
+    private fun getUUID(): String? {
         return Settings.Secure.getString(
             appContext.contentResolver,
             Settings.Secure.ANDROID_ID

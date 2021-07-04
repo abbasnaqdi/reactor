@@ -111,7 +111,24 @@ SampleData customDataClass = reactor.get("array");
 -----------------------------------------------------------
 
 reactor.remove("age", 0);
-reactor.clearAll();
+reactor.eraseAllData();
+```
+
+##### Custom data class Sample :
+
+```Kotlin
+// definition
+data class SampleData(
+    val id: Int = 24,
+    val name: String = "abbas"
+) : ReactorContract
+
+-----------------------------------------------------------
+
+// save, restore, remove
+reactor.put("simpleData", SampleData())
+reactor.get<SampleData>("simpleData") // return null if is not found
+reactor.remove<SampleData>("simpleData")
 ```
 
 ##### FAQ :

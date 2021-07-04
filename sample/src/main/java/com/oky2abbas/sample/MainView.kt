@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.main_view.*
 class MainView : AppCompatActivity() {
 
     private lateinit var reactor: Reactor
-    private lateinit var handler: Handler
+    private lateinit var reactorUtils: ReactorUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +20,7 @@ class MainView : AppCompatActivity() {
 
     private fun initObject() {
         reactor = Reactor(applicationContext)
-        handler = Handler(reactor)
+        reactorUtils = ReactorUtils(reactor)
     }
 
     private fun initView() {
@@ -28,10 +28,10 @@ class MainView : AppCompatActivity() {
     }
 
     private fun clickListener() = btnPrint.setOnClickListener {
-        handler.add()
-        handler.edit()
+        reactorUtils.add()
+        reactorUtils.edit()
 
-        print(handler.getKeyValue())
+        print(reactorUtils.getKeyValue())
 
 //        handler.removeData()
 //        print(handler.getKeyValue())
