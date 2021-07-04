@@ -56,7 +56,7 @@ Add the dependency :
 
 ```java
 dependencies {
-    implementation 'com.github.oky2abbas:reactor:v1.3.0'
+    implementation 'com.github.oky2abbas:reactor:v1+'
 }
 ```
 
