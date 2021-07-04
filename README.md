@@ -19,9 +19,9 @@
 
 ###### Second Edition 2.x.x
 
-- [ ] `Save and restore all objects at runtime in RAM`
+- [ ] `Save and restore all temporary object pool at runtime in RAM`
 - [ ] `Add a data branch (branches can be independent of the main branch) `
-- [ ] `Imports data from Shared Preferences to Reactor`
+- [ ] `Imports safe data from Shared Preferences to Reactor`
 - [ ] ‍‍`Change the underlying AES password generation`
 - [ ] `Change the storage infrastructure`
 - [ ] ‍‍‍`Add concurrency + thread-safe functionality`
@@ -56,7 +56,7 @@ Add the dependency :
 
 ```java
 dependencies {
-    implementation 'com.github.oky2abbas:reactor:v1.2.5'
+    implementation 'com.github.oky2abbas:reactor:v1.3.0'
 }
 ```
 
@@ -70,20 +70,22 @@ val reactor = Reactor(context, false) // disable encryption
 
 -----------------------------------------------------------
 
-reactor.put("name", "abbas")
+reactor.put("firstName", "abbas")
+reactor.put("lastName", null)
 reactor.put("age", 23)
-reactor.put("this", this::class.java)
+reactor.put("customDataClass", SampleData())
 
 -----------------------------------------------------------
 
-val name = reactor.get("name", "")
-val isDay = reactor.get("day", false)
-val thisClass = reactor.get("this", this::class.java)
+val firstName = reactor.get<String>("firstName")
+val lastName : String? = reactor.get("lastName")
+val isDay = reactor.get<Boolean>("isDay", false)
+val customDataClass = reactor.get("customDataClass")
 
 -----------------------------------------------------------
 
-reactor.remove("day", false)
-reactor.clearAll()
+reactor.remove<Int>("year", "week")
+reactor.eraseAllData()
 ```
 
 In `Java` :
@@ -94,15 +96,17 @@ Reactor reactor = new Reactor(getContext(), false); // disable encryption
 
 -----------------------------------------------------------
 
-reactor.put("name", "abbas");
+reactor.put("firstName", "abbas");
+reactor.put("lastName", null);
 reactor.put("age", 23);
-reactor.put("array", new int[]{0, 0, 0});
+reactor.put("customDataClass", new SampleData());
 
 -----------------------------------------------------------
 
-String name = reactor.get("name", "");
-Integer age = reactor.get("age", 0);
-int[] array = reactor.get("array", new int[]{0, 0, 0});
+String firstName = reactor.get("firstName", "abbas");
+String lastName = reactor.get("lastName", null);
+Integer age = reactor.get("age", 26);
+SampleData customDataClass = reactor.get("array");
 
 -----------------------------------------------------------
 
@@ -125,7 +129,7 @@ reactor.clearAll();
 ```
 MIT License
 
-Copyright (c) 2020  abbas naqdi
+Copyright (c) 2022  abbas naqdi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

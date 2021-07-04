@@ -66,7 +66,11 @@ class AESHelper {
     }
 
     @Throws(GeneralSecurityException::class)
-    private fun decrypt(key: SecretKeySpec, iv: ByteArray, decodedCipherText: ByteArray): ByteArray {
+    private fun decrypt(
+        key: SecretKeySpec,
+        iv: ByteArray,
+        decodedCipherText: ByteArray
+    ): ByteArray {
         val cipher = Cipher.getInstance(AES_MODE)
         val ivSpec = IvParameterSpec(iv)
         cipher.init(Cipher.DECRYPT_MODE, key, ivSpec)
