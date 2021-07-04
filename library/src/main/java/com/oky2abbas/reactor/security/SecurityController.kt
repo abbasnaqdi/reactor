@@ -2,19 +2,18 @@ package com.oky2abbas.reactor.security
 
 import android.content.Context
 import com.oky2abbas.reactor.engine.EngineController
-import java.io.Serializable
 
-internal class SecurityController(appContext: Context, private val isEncrypt: Boolean) {
+class SecurityController(appContext: Context, isEncrypt: Boolean) {
     private var engineController = EngineController(appContext, if (isEncrypt) "AES" else "NONE")
     private val securityModel = SecurityModel(appContext, isEncrypt)
 
-    internal fun <T : Serializable> put(key: String, value: String, type: T): Boolean {
+    fun put(key: String, value: String, typeName: String): Boolean {
         val encryptValue = securityModel.encryptValue(value)
-        return engineController.put(key, encryptValue, type)
+        return engineController.put(key, encryptValue, typeName)
     }
 
-    internal fun <T : Serializable> get(key: String, default: T): String? {
-        val value: String = engineController.get(key, default) ?: return null
+    fun get(key: String, typeName: String): String? {
+        val value: String = engineController.get(key, typeName) ?: return null
 
         return try {
             securityModel.decryptValue(value)
@@ -24,11 +23,11 @@ internal class SecurityController(appContext: Context, private val isEncrypt: Bo
         }
     }
 
-    fun <T : Serializable> remove(key: String, type: T): Boolean {
-        return engineController.remove(key, type)
+    fun remove(keys: List<String>, typeName: String): Boolean {
+        return engineController.remove(keys, typeName)
     }
 
-    fun clearAll() {
-        engineController.clearAll()
+    fun eraseAllData() {
+        engineController.eraseAllData()
     }
 }

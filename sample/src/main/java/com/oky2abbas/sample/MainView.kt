@@ -33,7 +33,8 @@ class MainView : AppCompatActivity() {
 
         print(handler.getKeyValue())
 
-        handler.removeAll()
+//        handler.removeData()
+//        print(handler.getKeyValue())
     }
 
     private fun print(text: String) {

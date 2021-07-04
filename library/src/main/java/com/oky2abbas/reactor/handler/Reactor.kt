@@ -6,34 +6,41 @@ import com.oky2abbas.reactor.security.SecurityController
 import java.io.Serializable
 
 class Reactor @JvmOverloads constructor(
-    private val appContext: Context,
+    appContext: Context,
     isEncrypt: Boolean = true
 ) {
+    val securityController = SecurityController(appContext, isEncrypt)
+    val serializationHelper = SerializationHelper()
 
-    private val securityController = SecurityController(appContext, isEncrypt)
-    private val serializationHelper = SerializationHelper()
-
-    fun <T : Serializable> put(key: String, value: T): Boolean {
-        val serializeValue = serializationHelper.serialize(value)
-        return securityController.put(key, serializeValue, value)
-    }
-
-    fun <T : Serializable> get(key: String, default: T): T {
-        val value = securityController.get(key, default)
-
+    inline fun <reified T : Serializable> put(key: String, value: T?): Boolean {
         if (value == null) {
-            put(key, default)
-            return default
+            remove<T>(key)
+            return true
         }
 
+        val typeName = T::class.java.simpleName
+        val serializeValue = serializationHelper.serialize(value)
+        return securityController.put(key, serializeValue, typeName)
+    }
+
+    inline fun <reified T : Serializable> get(key: String): T? {
+        val typeName = T::class.java.simpleName
+        val value = securityController.get(key, typeName) ?: return null
         return serializationHelper.deserialize(value)
     }
 
-    fun <T : Serializable> remove(key: String, type: T): Boolean {
-        return securityController.remove(key, type)
+    inline fun <reified T : Serializable> get(key: String, default: T): T {
+        val typeName = T::class.java.simpleName
+        val value = securityController.get(key, typeName) ?: return default
+        return serializationHelper.deserialize(value)
     }
 
-    fun clearAll() {
-        securityController.clearAll()
+    inline fun <reified T : Serializable> remove(vararg keys: String): Boolean {
+        val typeName = T::class.java.simpleName
+        return securityController.remove(keys.toList(), typeName)
+    }
+
+    fun eraseAllData() {
+        securityController.eraseAllData()
     }
 }

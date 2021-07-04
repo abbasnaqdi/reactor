@@ -7,7 +7,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 internal class EngineModel(
-    private val appContext: Context,
+    appContext: Context,
     private val scope: String
 ) {
 
@@ -31,7 +31,7 @@ internal class EngineModel(
         return File("$path$scope/$name.json").exists()
     }
 
-    internal fun clearAll(): Boolean {
+    internal fun eraseAllData(): Boolean {
         return File(path + scope).deleteRecursively()
     }
 
