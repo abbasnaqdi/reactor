@@ -146,7 +146,7 @@ reactor.remove<SampleData>("simpleData")
 ```
 MIT License
 
-Copyright (c) 2022  abbas naqdi
+Copyright (c) 2030  this user
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
