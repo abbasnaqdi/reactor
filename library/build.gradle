@@ -2,13 +2,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion targetV
-
+    compileSdk targetV
     defaultConfig {
-        minSdkVersion minV
-        targetSdkVersion targetV
-        versionCode vCode
-        versionName vName
+        minSdk minV
+        targetSdk targetV
         resConfig "en"
     }
 
@@ -19,12 +16,15 @@ android {
                     'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinV"
-}
+dependencies {}

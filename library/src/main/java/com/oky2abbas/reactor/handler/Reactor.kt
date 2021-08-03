@@ -35,7 +35,7 @@ class Reactor @JvmOverloads constructor(
         return serializationHelper.deserialize(value)
     }
 
-    inline fun <reified T : Serializable> remove(vararg keys: String): Boolean {
+    inline fun <reified T : Any> remove(vararg keys: String): Boolean {
         val typeName = T::class.java.simpleName
         return securityController.remove(keys.toList(), typeName)
     }
