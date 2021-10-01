@@ -2,8 +2,8 @@ buildscript {
     ext {
         minV = 15
         targetV = 31
-        vCode = 133
-        vName = "1.3.3"
+        vCode = 135
+        vName = "1.3.5"
     }
 
     repositories {
@@ -12,8 +12,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21'
+        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31'
     }
 }
 
