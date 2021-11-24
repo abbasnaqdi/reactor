@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdk minV
         targetSdk targetV
-        versionCode vCode
-        versionName vName
         resConfig "en"
     }
 
