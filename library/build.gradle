@@ -37,8 +37,9 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.github.oky2abbas:reactor'
-                artifactId = 'com.github.oky2abbas:reactor'
+
+                groupId = 'com.github.aaaamirabbas'
+                artifactId = 'reactor'
                 version = '1.3.6'
             }
         }
