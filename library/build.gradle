@@ -34,7 +34,6 @@ android {
             publications {
                 release(MavenPublication) {
                     from components.release
-
                     groupId = 'com.github.aaaamirabbas'
                     artifactId = 'reactor'
                     version = '1.3.6'
