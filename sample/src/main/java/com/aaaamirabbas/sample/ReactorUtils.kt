@@ -1,33 +1,38 @@
 package com.aaaamirabbas.sample
 
-
 import com.aaaamirabbas.reactor.handler.Reactor
-
 
 class ReactorUtils(private val reactor: Reactor) {
     fun add() {
         reactor.put("name", "abbas")
-        reactor.put("age", null)
+        reactor.put<Int>("age", null)
         reactor.put("life", 1L)
         reactor.put("is_man", true)
         reactor.put("array", arrayOf(2, 3, 4, "6", false))
         reactor.put("sampleData", SampleData())
+
+        println("ADDED")
     }
 
 
     fun edit() {
         reactor.put("name", "abbas naqdi")
+        reactor.put<Boolean>("is_man", null)
+
+        println("EDITED")
     }
 
     fun removeData() {
-        reactor.remove<Int>("age", "age2")     //delete multi key
-        reactor.eraseAllData()                      //delete all keys
+        reactor.remove<String>("name")     //delete multi key
+        // reactor.eraseAllData()
+
+        println("REMOVED")
     }
 
     fun getKeyValue(): String {
         val name = reactor.get<String>("name")
         val age = reactor.get("age", 0)
-        val life = reactor.get("life", 0L)
+        val life = reactor.get<Long>("life")
         val man = reactor.get("is_man", false)
         val array = reactor.get<Array<Int>>("array")
         val sampleData = reactor.get<SampleData>("sampleData")

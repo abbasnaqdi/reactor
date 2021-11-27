@@ -42,7 +42,7 @@ internal class EngineController(
 
         val fetchObject = model.fetchJSON(typeName)
         keys.forEach { key ->
-            if (!fetchObject.has(key))
+            if (fetchObject.has(key))
                 fetchObject.remove(key)
         }
 

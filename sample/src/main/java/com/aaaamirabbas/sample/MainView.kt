@@ -31,13 +31,13 @@ class MainView : AppCompatActivity() {
         reactorUtils.add()
         reactorUtils.edit()
 
-        print(reactorUtils.getKeyValue())
+        log(reactorUtils.getKeyValue())
 
-//        handler.removeData()
-//        print(handler.getKeyValue())
+        reactorUtils.removeData()
+        log(reactorUtils.getKeyValue())
     }
 
-    private fun print(text: String) {
+    private fun log(text: String) {
         txtPrint.text = text
     }
 }
