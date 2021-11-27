@@ -28,16 +28,16 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+}
 
-    afterEvaluate {
-        publishing {
-            publications {
-                release(MavenPublication) {
-                    from components.release
-                    groupId = 'com.github.aaaamirabbas'
-                    artifactId = 'reactor'
-                    version = '1.3.6'
-                }
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.aaaamirabbas'
+                artifactId = 'reactor'
+                version = '1.3.6'
             }
         }
     }
