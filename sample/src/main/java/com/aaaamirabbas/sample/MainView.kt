@@ -1,8 +1,8 @@
-package com.oky2abbas.sample
+package com.aaaamirabbas.sample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.oky2abbas.reactor.handler.Reactor
+import com.aaaamirabbas.reactor.handler.Reactor
 import kotlinx.android.synthetic.main.main_view.*
 
 class MainView : AppCompatActivity() {

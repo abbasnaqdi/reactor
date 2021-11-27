@@ -1,7 +1,7 @@
-package com.oky2abbas.reactor.security
+package com.aaaamirabbas.reactor.security
 
 import android.content.Context
-import com.oky2abbas.reactor.engine.EngineController
+import com.aaaamirabbas.reactor.engine.EngineController
 
 class SecurityController(appContext: Context, isEncrypt: Boolean) {
     private var engineController = EngineController(appContext, if (isEncrypt) "AES" else "NONE")

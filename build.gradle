@@ -2,14 +2,13 @@ buildscript {
     ext {
         minV = 15
         targetV = 31
-        vCode = 136
+        vCode = 137
         vName = "1.3.6"
     }
 
     repositories {
         google()
         mavenCentral()
-        jcenter()
         maven { url 'https://jitpack.io' }
     }
 

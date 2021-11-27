@@ -1,6 +1,6 @@
-package com.oky2abbas.sample
+package com.aaaamirabbas.sample
 
-import com.oky2abbas.reactor.helper.ReactorContract
+import com.aaaamirabbas.reactor.helper.ReactorContract
 
 data class SampleData(
     val id: Int = 24,
