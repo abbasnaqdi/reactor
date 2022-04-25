@@ -11,7 +11,7 @@ class Reactor @JvmOverloads constructor(
     val securityController = SecurityController(appContext, isEncrypt)
     val serializationHelper = SerializationHelper()
 
-    inline fun <reified T : Serializable> put(key: String, value: T?): Boolean {
+    inline fun <reified T : Serializable> put(key: String, value: T?): Boolean? {
         if (value == null) {
             remove<T>(key)
             return true
@@ -19,7 +19,9 @@ class Reactor @JvmOverloads constructor(
 
         val typeName = T::class.java.simpleName
         val serializeValue = serializationHelper.serialize(value)
-        return securityController.put(key, serializeValue, typeName)
+        return serializeValue?.let {
+            securityController.put(key, it, typeName)
+        }
     }
 
     inline fun <reified T : Serializable> get(key: String): T? {
@@ -31,7 +33,7 @@ class Reactor @JvmOverloads constructor(
     inline fun <reified T : Serializable> get(key: String, default: T): T {
         val typeName = T::class.java.simpleName
         val value = securityController.get(key, typeName) ?: return default
-        return serializationHelper.deserialize(value)
+        return serializationHelper.deserialize(value) ?: return default
     }
 
     inline fun <reified T : Serializable> remove(vararg keys: String): Boolean {
