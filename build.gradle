@@ -2,8 +2,8 @@ buildscript {
     ext {
         minV = 15
         targetV = 31
-        vCode = 153
-        vName = "1.5.3"
+        vCode = 154
+        vName = "1.5.4"
     }
 
     repositories {
