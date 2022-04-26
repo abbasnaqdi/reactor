@@ -14,7 +14,9 @@ object Base64Utils {
     }
 
     fun decode(base64: String): String {
-        val decodeString = Base64.decode(base64, Base64.DEFAULT)
+        val decodeString = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            getDecoder().decode(base64)
+        else Base64.decode(base64, Base64.DEFAULT)
 
         return String(decodeString, Charsets.UTF_8)
     }
