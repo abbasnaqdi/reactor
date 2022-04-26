@@ -13,7 +13,10 @@ class SerializationHelper {
         kotlin.runCatching {
             val outputStream = ByteArrayOutputStream()
             val objectOutput = ObjectOutputStream(
-                Base64OutputStream(outputStream, Base64.NO_PADDING or Base64.NO_WRAP)
+                Base64OutputStream(
+                    outputStream,
+                    Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
+                )
             )
 
             objectOutput.use {
@@ -38,7 +41,7 @@ class SerializationHelper {
         kotlin.runCatching {
             val inputStream = ByteArrayInputStream(data.toByteArray(charset("UTF-8")))
             val objectInput = ObjectInputStream(
-                Base64InputStream(inputStream, Base64.NO_PADDING or Base64.NO_WRAP)
+                Base64InputStream(inputStream, Base64.DEFAULT)
             )
 
             objectInput.use { it.readObject() as T }

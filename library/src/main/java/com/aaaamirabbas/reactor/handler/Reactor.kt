@@ -24,16 +24,36 @@ class Reactor @JvmOverloads constructor(
         }
     }
 
-    inline fun <reified T : Serializable> get(key: String): T? {
-        val typeName = T::class.java.simpleName
-        val value = securityController.get(key, typeName) ?: return null
-        return serializationHelper.deserialize(value)
+    fun putString(key: String, value: String?): Boolean {
+        if (value == null) {
+            remove<String>(key)
+            return true
+        }
+
+        val typeName = String::class.java.simpleName
+        return securityController.put(key, value, typeName)
     }
 
     inline fun <reified T : Serializable> get(key: String, default: T): T {
         val typeName = T::class.java.simpleName
         val value = securityController.get(key, typeName) ?: return default
         return serializationHelper.deserialize(value) ?: return default
+    }
+
+    inline fun <reified T : Serializable> get(key: String): T? {
+        val typeName = T::class.java.simpleName
+        val value = securityController.get(key, typeName) ?: return null
+        return serializationHelper.deserialize(value)
+    }
+
+    fun getString(key: String, default: String): String {
+        val typeName = String::class.java.simpleName
+        return securityController.get(key, typeName) ?: return default
+    }
+
+    fun getString(key: String): String? {
+        val typeName = String::class.java.simpleName
+        return securityController.get(key, typeName)
     }
 
     inline fun <reified T : Serializable> remove(vararg keys: String): Boolean {

@@ -10,7 +10,7 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
 
-class AESHelper {
+object AESUtils {
 
     private val AES_MODE = "AES/CBC/PKCS7Padding"
     private val HASH_ALGORITHM = "SHA-256"

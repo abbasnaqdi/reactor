@@ -19,7 +19,7 @@ class MainView : AppCompatActivity() {
     }
 
     private fun initObject() {
-        reactor = Reactor(applicationContext)
+        reactor = Reactor(applicationContext, false)
         reactorUtils = ReactorUtils(reactor)
     }
 

@@ -10,6 +10,7 @@ class ReactorUtils(private val reactor: Reactor) {
         reactor.put("is_man", true)
         reactor.put("array", arrayOf(2, 3, 4, "6", false))
         reactor.put("sampleData", SampleData())
+        reactor.putString("sampleData", SampleData().toString())
 
         println("ADDED")
     }
@@ -36,6 +37,7 @@ class ReactorUtils(private val reactor: Reactor) {
         val man = reactor.get("is_man", false)
         val array = reactor.get<Array<Int>>("array")
         val sampleData = reactor.get<SampleData>("sampleData")
+        val sampleDataUnsafe = reactor.getString("sampleData")
 
         val first: String? = reactor.get("first")
         val second: String = reactor.get("second", "def value")
@@ -47,6 +49,7 @@ class ReactorUtils(private val reactor: Reactor) {
                 "array -> $array\n" +
                 "first -> $first\n" +
                 "second -> $second\n" +
-                "sampleData -> $sampleData\n"
+                "sampleData -> $sampleData\n" +
+                "sampleDataUnsafe -> $sampleDataUnsafe\n"
     }
 }
