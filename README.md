@@ -47,7 +47,7 @@ Add the dependency :
 
 ```java
 dependencies {
-    implementation 'com.github.aaaamirabbas:reactor:1.5.2'
+    implementation 'com.github.aaaamirabbas:reactor:1.5.6'
 }
 ```
 
