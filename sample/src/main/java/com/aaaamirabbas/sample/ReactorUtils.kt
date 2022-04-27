@@ -1,9 +1,11 @@
 package com.aaaamirabbas.sample
 
 import com.aaaamirabbas.reactor.handler.Reactor
+import com.aaaamirabbas.reactor.helper.Base64Utils
 
 class ReactorUtils(private val reactor: Reactor) {
-    fun add() {
+
+     fun add() {
         reactor.put("name", "abbas")
         reactor.put<Int>("age", null)
         reactor.put("life", 1L)
