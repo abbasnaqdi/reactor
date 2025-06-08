@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdk = rootProject.extra["minV"] as Int
         targetSdk = rootProject.extra["targetV"] as Int
-        resConfigs.add("en") // Changed from resConfig "en"
+        resConfigs("en") // Corrected/verified line
     }
 
     buildTypes {
@@ -23,12 +23,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11 // Changed from = 11
-        targetCompatibility = JavaVersion.VERSION_11 // Changed from = 11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17" // Update from "11" or set if not present
     }
 
     // The publishing block needs to be correctly translated.
@@ -50,8 +50,8 @@ android {
 
 dependencies {
     // DataStore
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
-    implementation("androidx.datastore:datastore-proto:1.1.1")
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+    implementation("androidx.datastore:datastore-proto:1.1.7")
     // Security for encryption
     implementation("androidx.security:security-crypto:1.0.0")
 

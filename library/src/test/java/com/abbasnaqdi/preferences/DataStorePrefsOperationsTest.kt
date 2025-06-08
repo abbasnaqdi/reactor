@@ -1,8 +1,9 @@
-package com.example.newdatastorelib.preferences
+package com.abbasnaqdi.preferences // Updated package
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.* // ktlint-disable no-wildcard-imports
 import io.mockk.* // ktlint-disable no-wildcard-imports
+// DataStorePrefsOperations is in the same package, so no import needed if it's internal/public
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
@@ -23,7 +24,7 @@ class DataStorePrefsOperationsTest { // Renamed for clarity
     @Before
     fun setUp() {
         mockDataStore = mockk()
-        dataStorePrefsOperations = DataStorePrefsOperations(mockDataStore) // Inject mock
+        dataStorePrefsOperations = com.abbasnaqdi.preferences.DataStorePrefsOperations(mockDataStore) // Explicitly use new package
     }
 
     @Test

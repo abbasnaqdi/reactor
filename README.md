@@ -1,133 +1,275 @@
-##### `Reactor`
+# Simple DataStore Abstraction Library (com.abbasnaqdi)
 
-[![](https://jitpack.io/v/aaaamirabbas/reactor.svg)](https://jitpack.io/#dfmAbbas/reactor)
-[![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/aaaamirabbas/reactor)
-[![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat)](https://github.com/aaaamirabbas/reactor)
+A Kotlin-based library providing a simplified and robust abstraction layer for Jetpack DataStore, supporting both Preferences and Proto DataStore with optional encryption.
 
-**Reactor** is a `fast` and `secure` key-value library for Android, and has an embedded database based on the JSON structure and is a great alternative to Shared Preferences.
+## Features
 
-##### Features + Road map
+-   **Simplified API:** Hides the complexity of setting up and using Jetpack DataStore.
+-   **Preferences DataStore:** Easy-to-use API for key-value storage, similar to SharedPreferences but with the benefits of DataStore.
+-   **Proto DataStore:** Store typed objects using Protocol Buffers.
+-   **Optional Encryption:**
+    -   **Preferences:** Securely encrypts/decrypts keys and values using `EncryptedSharedPreferences` (backed by Android Keystore).
+    -   **Proto:** Structural support for encryption is present. **IMPORTANT: The current Proto encryption implementation is a NON-FUNCTIONAL PLACEHOLDER and SHOULD NOT be used for sensitive data in production until a robust cryptographic solution (e.g., Google Tink) is integrated.**
+-   **Kotlin First:** Leverages Kotlin, Coroutines, and Flow for asynchronous and reactive data handling.
+-   **Type Safe:** For Proto DataStore and typed Preferences keys.
 
-###### First Edition 1.x.x
+## Setup
 
-- [x] `Save and restore a variety of objects (serialization and deserialization)`
-- [x] `Symmetric encryption of objects (signed by target application at runtime + Hardware_ID)`
-- [x] `Very high performance‍`
-- [x] `Very low library size (No need for other libraries)`
-- [x] `Supported and tested in API 15 and above`
-- [x] `Minimal and easy to use :)`
+To use this library in your Android project (assuming it's a module within your project):
 
-###### Second Edition 2.x.x
+1.  Ensure your project's root `build.gradle.kts` (or `build.gradle`) includes `google()` and `mavenCentral()` in its repositories block.
+2.  Add the library module as a dependency in your app module's `build.gradle.kts` (or `build.gradle`):
 
-- [ ] `Save and restore all temporary object pool at runtime in RAM`
-- [ ] `Add a data branch (branches can be independent of the main branch) `
-- [ ] `Imports safe data from Shared Preferences to Reactor`
-- [ ] ‍‍`Change the underlying AES password generation`
-- [ ] `Change the storage infrastructure`
-- [ ] ‍‍‍`Add concurrency + thread-safe functionality`
-
-[![Donate](https://img.shields.io/badge/Cryptocurrency-Donate-green)](https://idpay.ir/aaaamirabbas) **BTC**: `1HPZyUP9EJZi2S87QrvCDrE47qRV4i5Fze`
-
-[![Donate](https://img.shields.io/badge/Cryptocurrency-Donate-blue)](https://idpay.ir/aaaamirabbas) **ETH or USDT**: `0x4a4b0A26Eb31e9152653E4C08bCF10f04a0A02a9`
-
-##### Getting Started :
-
-Add to your root build.gradle :Ï
-
-```java
-allprojects {
-  repositories {
-      ...
-      maven { url 'https://jitpack.io' }
+    ```kotlin
+    dependencies {
+        implementation(project(":library")) // Or the specific name of this library module
+        // ... other dependencies
     }
-  }
+    ```
+
+## Initialization
+
+First, get an instance of `NewDataStore` (ideally as a singleton, managed by your DI framework or Application class):
+
+```kotlin
+import com.abbasnaqdi.core.NewDataStore
+
+// In your Application class, ViewModel, or DI setup
+val dataStoreManager = NewDataStore(applicationContext)
 ```
 
-Add the dependency :
+## Usage Examples
 
-```java
-dependencies {
-    implementation 'com.github.aaaamirabbas:reactor:1.5.6'
+### Preferences DataStore
+
+Provides a simple key-value storage mechanism.
+
+**1. Get a Preferences Handler:**
+
+```kotlin
+// For unencrypted Preferences (recommended for non-sensitive data)
+val prefsHandler = dataStoreManager.preferences(name = "my_app_settings", encrypted = false)
+
+// For encrypted Preferences (recommended for sensitive data)
+val securePrefsHandler = dataStoreManager.preferences(name = "my_secure_settings", encrypted = true)
+```
+
+**2. Define Keys:**
+
+Use `androidx.datastore.preferences.core` key factories:
+
+```kotlin
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.booleanPreferencesKey
+
+val USER_NAME_KEY = stringPreferencesKey("user_name")
+val LOGIN_COUNT_KEY = intPreferencesKey("login_count")
+val IS_SUBSCRIBED_KEY = booleanPreferencesKey("is_subscribed")
+```
+
+**3. Saving Data (`put`):**
+
+`put` is a suspend function.
+
+```kotlin
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking // Or use a CoroutineScope
+
+// Inside a coroutine scope
+scope.launch {
+    prefsHandler.put(USER_NAME_KEY, "Jane Doe")
+    securePrefsHandler.put(LOGIN_COUNT_KEY, 5)
 }
 ```
 
-##### Simple API (default) :
+**4. Reading Data (`get` Flow):**
 
-In `Kotlin` :
+`get` returns a `Flow<T?>` that emits when the data changes.
 
-```java
-val reactor = Reactor(context)
-val reactor = Reactor(context, false) // disable encryption
+```kotlin
+import kotlinx.coroutines.flow.map
+import androidx.lifecycle.compose.collectAsStateWithLifecycle // For Compose UI
 
------------------------------------------------------------
+// In your ViewModel or Composable:
+val userNameFlow: Flow<String?> = prefsHandler.get(USER_NAME_KEY, "Default User") // With default
+val loginCountFlow: Flow<Int?> = securePrefsHandler.get(LOGIN_COUNT_KEY)         // Nullable
 
-reactor.put("firstName", "abbas")
-reactor.put("lastName", null)
-reactor.put("age", 23)
-reactor.put("customDataClass", SampleData())
-
------------------------------------------------------------
-
-val firstName = reactor.get<String>("firstName")
-val lastName : String? = reactor.get("lastName")
-val isDay = reactor.get<Boolean>("isDay", false)
-val customDataClass = reactor.get("customDataClass")
-
------------------------------------------------------------
-
-reactor.remove<Int>("year", "week")
-reactor.eraseAllData()
+// Example in a Composable
+val userName by userNameFlow.collectAsStateWithLifecycle()
+Text("User: ${userName ?: "Not set"}")
 ```
 
-In `Java` :
+**5. Reading Data Once (`readOnce`):**
 
-```java
-Reactor reactor = new Reactor(getContext());
-Reactor reactor = new Reactor(getContext(), false); // disable encryption
+`readOnce` is a suspend function that returns `Result<T?>`.
 
------------------------------------------------------------
-
-reactor.put("firstName", "abbas");
-reactor.put("lastName", null);
-reactor.put("age", 23);
-reactor.put("customDataClass", new SampleData());
-
------------------------------------------------------------
-
-String firstName = reactor.get("firstName", "abbas");
-String lastName = reactor.get("lastName", null);
-Integer age = reactor.get("age", 26);
-SampleData customDataClass = reactor.get("array");
-
------------------------------------------------------------
-
-reactor.remove("age", 0);
-reactor.eraseAllData();
+```kotlin
+scope.launch {
+    val nameResult = prefsHandler.readOnce(USER_NAME_KEY, "Guest")
+    nameResult.onSuccess { name ->
+        println("Current user: ${name ?: "Not available"}")
+    }.onFailure { exception ->
+        println("Failed to read user name: $exception")
+    }
+}
 ```
 
-##### Custom data class Sample :
+**6. Removing Data (`remove`):**
 
-```Kotlin
-// definition
-data class SampleData(
-    val id: Int = 24,
-    val name: String = "abbas"
-) : ReactorContract
+`remove` is a suspend function.
 
------------------------------------------------------------
-
-// save, restore, remove
-reactor.put("simpleData", SampleData())
-reactor.get<SampleData>("simpleData") // return null if is not found
-reactor.remove<SampleData>("simpleData")
+```kotlin
+scope.launch {
+    prefsHandler.remove(USER_NAME_KEY)
+}
 ```
 
-##### FAQ :
+**7. Clearing All Preferences in a Handler (`clear`):**
 
-###### Need more help?
+`clear` is a suspend function.
 
-- [Check out the classes in this folder](sample/src/main/java/com/aaaamirabbas/sample)
+```kotlin
+scope.launch {
+    prefsHandler.clear() // Clears all preferences managed by this specific handler instance ("my_app_settings")
+}
+```
 
-###### How to store and restore the custom class ?
+### Proto DataStore
 
-- [See this issue : #1](https://github.com/aaaamirabbas/reactor/issues/1)
+Allows you to store typed objects using Protocol Buffers.
+
+**1. Define your Proto schema:**
+
+Create a `.proto` file in your `app/src/main/proto` directory (e.g., `user_prefs.proto`):
+
+```protobuf
+syntax = "proto3";
+
+option java_package = "com.abbasnaqdi.sample.datastore"; // Adjust to your sample app's package
+option java_multiple_files = true;
+
+message UserPreferences {
+  string user_id = 1;
+  bool notifications_enabled = 2;
+  Theme theme = 3;
+}
+
+enum Theme {
+  THEME_UNSPECIFIED = 0;
+  LIGHT = 1;
+  DARK = 2;
+  SYSTEM = 3;
+}
+```
+(Ensure you have the protobuf-gradle-plugin configured in your app module to generate Kotlin classes from this schema).
+
+**2. Create a Serializer for your Proto type:**
+
+```kotlin
+import androidx.datastore.core.CorruptionException
+import androidx.datastore.core.Serializer
+import com.google.protobuf.InvalidProtocolBufferException
+import java.io.InputStream
+import java.io.OutputStream
+import com.abbasnaqdi.sample.datastore.UserPreferences // Import your generated class
+
+object UserPreferencesSerializer : Serializer<UserPreferences> {
+    override val defaultValue: UserPreferences = UserPreferences.getDefaultInstance()
+
+    override suspend fun readFrom(input: InputStream): UserPreferences {
+        try {
+            return UserPreferences.parseFrom(input)
+        } catch (exception: InvalidProtocolBufferException) {
+            throw CorruptionException("Cannot read proto.", exception)
+        }
+    }
+
+    override suspend fun writeTo(t: UserPreferences, output: OutputStream) = t.writeTo(output)
+}
+```
+
+**3. Get a Proto Handler:**
+
+```kotlin
+// For unencrypted Proto DataStore
+val userPrefsHandler = dataStoreManager.proto(
+    serializer = UserPreferencesSerializer,
+    fileName = "user_prefs.pb",
+    encrypted = false
+)
+
+// For encrypted Proto DataStore
+val secureUserPrefsHandler = dataStoreManager.proto(
+    serializer = UserPreferencesSerializer,
+    fileName = "secure_user_prefs.pb",
+    encrypted = true // REMINDER: Current Proto encryption is a non-functional placeholder!
+)
+```
+
+**4. Reading Data (`data` Flow):**
+
+The `data` property returns a `Flow<T>`.
+
+```kotlin
+val userPreferencesFlow: Flow<UserPreferences> = userPrefsHandler.data
+
+// Example in a Composable
+val userPrefs by userPreferencesFlow.collectAsStateWithLifecycle(initialValue = UserPreferencesSerializer.defaultValue)
+if (userPrefs.notificationsEnabled) {
+    Text("Notifications are ON")
+}
+```
+
+**5. Updating Data (`updateData`):**
+
+`updateData` is a suspend function that transactionally updates the stored object. It returns `Result<T>`.
+
+```kotlin
+scope.launch {
+    val updateResult = userPrefsHandler.updateData { currentPrefs ->
+        currentPrefs.toBuilder()
+            .setNotificationsEnabled(true)
+            .setTheme(UserPreferences.Theme.DARK)
+            .build()
+    }
+    updateResult.onSuccess { updatedPrefs ->
+        println("Successfully updated prefs: $updatedPrefs")
+    }.onFailure { exception ->
+        println("Failed to update prefs: $exception")
+    }
+}
+```
+
+**6. Reading Data Once (`readData`):**
+
+`readData` is a suspend function that returns the current state as `Result<T>`.
+
+```kotlin
+scope.launch {
+    val currentPrefsResult = userPrefsHandler.readData()
+    currentPrefsResult.onSuccess { prefs ->
+        println("Current user preferences: $prefs")
+    }.onFailure { exception ->
+        println("Failed to read user preferences: $exception")
+    }
+}
+```
+
+## Error Handling
+
+-   **Suspend functions** (like `put`, `remove`, `clear` for Preferences; `updateData`, `readData` for Proto; `readOnce` for Preferences) return `kotlin.Result<T>` where applicable for operations that might fail directly (like I/O or serialization). Check `result.isSuccess` or use `result.onSuccess{...}.onFailure{...}`.
+-   **Flows** (`get` for Preferences, `data` for Proto) emit values asynchronously. Errors encountered during data collection (like `IOException` or `CorruptionException`) should be handled using the `.catch{}` operator on the Flow in the collector's scope. The library wraps some specific exceptions (e.g., `DataStoreReadException`, `DataStoreWriteException` for Proto) for more context.
+
+## Concurrency
+
+-   All DataStore operations are main-safe (I/O is performed on `Dispatchers.IO` internally by Jetpack DataStore or by this library for `EncryptedSharedPreferences`).
+-   The library uses `ConcurrentHashMap` for caching DataStore instances, making the retrieval of handlers thread-safe.
+-   Jetpack DataStore guarantees read-after-write consistency within a single process.
+
+## Important Note on Proto DataStore Encryption
+
+The `encrypted = true` option for `ProtoHandler` currently uses a **NON-FUNCTIONAL PLACEHOLDER** for its encryption mechanism (`EncryptedProtoSerializer`). While the structure is in place, it **DOES NOT ACTUALLY ENCRYPT THE DATA** and should not be relied upon for sensitive information in its current state. A robust cryptographic solution (e.g., integrating Google Tink) is required to make this feature production-ready.
+
+---
+*This library is currently under development.*

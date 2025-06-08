@@ -1,4 +1,4 @@
-package com.example.newdatastorelib.proto
+package com.abbasnaqdi.proto // Updated package
 
 import android.content.Context
 import androidx.datastore.core.CorruptionException
@@ -6,8 +6,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStoreFile
-// TODO: Add import for ReplaceFileCorruptionHandler if used
-// import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler // Added import
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.catch
@@ -32,18 +31,17 @@ class ProtoHandler<T : Any>(
         }
     }
 
-    private val dataStore: DataStore<T> by lazy {
+    internal val dataStore: DataStore<T> by lazy { // Made dataStore internal for test observation if needed (as per prompt, though test workarounds might be better)
         DataStoreFactory.create(
             serializer = actualSerializer, // Use the potentially wrapped serializer
-            produceFile = { appContext.dataStoreFile(fileName) }
-            // TODO: Add a CorruptionHandler, especially for encrypted data
-            // e.g., corruptionHandler = ReplaceFileCorruptionHandler(
-            //    produceNewData = { actualSerializer.defaultValue }
-            // )
+            produceFile = { appContext.dataStoreFile(fileName) },
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { actualSerializer.defaultValue }
+            )
         )
     }
 
-    val data: Flow<T>
+    open val data: Flow<T> // Made open for test workaround in ProtoHandlerTest.kt
         get() = dataStore.data
             .catch { exception ->
                 // Handle specific exceptions like CorruptionException or IOException

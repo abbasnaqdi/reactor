@@ -2,8 +2,8 @@
 buildscript {
     // Define extra properties for versions, similar to ext block in Groovy
     extra.apply {
-        set("minV", 15)
-        set("targetV", 31) // Consider updating this to a more recent API level like 33 or 34 if appropriate for new library
+        set("minV", 23)
+        set("targetV", 34) // Consider updating this to a more recent API level like 33 or 34 if appropriate for new library
         set("vCode", 156) // This is for the old 'reactor' app, might not be relevant for the new lib
         set("vName", "1.5.6") // Same as above
     }
@@ -15,8 +15,8 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.4") // Consider updating AGP version
-        classpath(kotlin("gradle-plugin", version = "1.6.21")) // Consider updating Kotlin plugin version
+        classpath("com.android.tools.build:gradle:8.2.2") // Consider updating AGP version
+        classpath(kotlin("gradle-plugin", version = "2.0.0")) // Consider updating Kotlin plugin version
     }
 }
 

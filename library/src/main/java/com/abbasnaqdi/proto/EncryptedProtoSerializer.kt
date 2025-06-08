@@ -2,7 +2,7 @@
 // It does NOT actually encrypt or decrypt data. This class requires a robust cryptographic
 // implementation (e.g., using Google Tink or verifying direct Cipher usage) before being
 // used in production for sensitive data.
-package com.example.newdatastorelib.proto
+package com.abbasnaqdi.proto // Updated package
 
 import android.content.Context
 import androidx.datastore.core.Serializer

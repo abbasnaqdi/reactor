@@ -1,4 +1,4 @@
-package com.example.newdatastorelib.preferences
+package com.abbasnaqdi.preferences // Updated package
 
 import android.content.Context
 import android.content.SharedPreferences

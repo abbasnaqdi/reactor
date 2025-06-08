@@ -1,7 +1,8 @@
-package com.example.newdatastorelib.preferences
+package com.abbasnaqdi.preferences // Updated package
 
 import android.content.SharedPreferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+// EncryptedPrefsOperations is in the same package
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -47,7 +48,7 @@ class EncryptedPrefsOperationsTest {
         every { mockSharedPreferences.contains(any()) } returns false
 
 
-        encryptedPrefsOperations = EncryptedPrefsOperations(mockSharedPreferences)
+        encryptedPrefsOperations = com.abbasnaqdi.preferences.EncryptedPrefsOperations(mockSharedPreferences) // Explicitly use new package
     }
 
     @After

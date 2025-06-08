@@ -1,7 +1,10 @@
-package com.example.newdatastorelib.proto
+package com.abbasnaqdi.proto // Updated package
 
 import android.content.Context
 import androidx.datastore.core.CorruptionException
+// ProtoHandler, DataStoreReadException, DataStoreWriteException are in the same package.
+// TestProto, TestProtoSerializer are in the same file.
+// createTestableProtoHandlerWithInjectedStore is in the same file.
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.Serializer
 import io.mockk.* // ktlint-disable no-wildcard-imports
@@ -57,12 +60,12 @@ internal fun createTestableProtoHandlerWithInjectedStore( // Made internal for p
     context: Context = mockk(relaxed = true),
     serializer: Serializer<TestProto> = TestProtoSerializer(),
     encrypted: Boolean = false // Added encrypted flag
-): ProtoHandler<TestProto> {
-    return object : ProtoHandler<TestProto>(context, "test.pb", serializer, encrypted) {
+): com.abbasnaqdi.proto.ProtoHandler<TestProto> { // Explicitly use new package for return type
+    return object : com.abbasnaqdi.proto.ProtoHandler<TestProto>(context, "test.pb", serializer, encrypted) { // Explicitly use new package
         override val data: Flow<TestProto>
             get() = mockDataStore.data.catch { exception ->
                 if (exception is IOException || exception is CorruptionException) {
-                    throw DataStoreReadException("Error reading Proto DataStore: ${exception.message}", exception)
+                    throw com.abbasnaqdi.proto.DataStoreReadException("Error reading Proto DataStore: ${exception.message}", exception) // Explicitly use new package
                 }
                 throw exception
             }
@@ -71,7 +74,7 @@ internal fun createTestableProtoHandlerWithInjectedStore( // Made internal for p
             return try {
                 Result.success(mockDataStore.updateData(transform))
             } catch (e: Exception) {
-                Result.failure(DataStoreWriteException("Error updating Proto DataStore: ${e.message}", e))
+                Result.failure(com.abbasnaqdi.proto.DataStoreWriteException("Error updating Proto DataStore: ${e.message}", e)) // Explicitly use new package
             }
         }
         // readData() in ProtoHandler uses its public `data` property, which is overridden here.
@@ -84,7 +87,7 @@ class ProtoHandlerEncryptedTest {
     private lateinit var mockContext: Context
     private lateinit var mockDataStore: DataStore<TestProto>
     private lateinit var realUserSerializer: TestProtoSerializer
-    private lateinit var protoHandler: ProtoHandler<TestProto>
+    private lateinit var protoHandler: com.abbasnaqdi.proto.ProtoHandler<TestProto> // Explicitly use new package
 
 
     @Before

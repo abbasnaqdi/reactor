@@ -1,11 +1,13 @@
-package com.example.newdatastorelib.core
+package com.abbasnaqdi.core // Updated package
 
 import android.content.Context
 import androidx.datastore.core.Serializer
-import com.example.newdatastorelib.preferences.PreferencesHandler
-import com.example.newdatastorelib.proto.ProtoHandler // Assuming TestProto and TestProtoSerializer are accessible or redefined for test
+import com.abbasnaqdi.preferences.PreferencesHandler // Updated import
+import com.abbasnaqdi.proto.ProtoHandler // Updated import
 import io.mockk.every
 import io.mockk.mockk
+// Minimal Proto classes for testing caching with different serializer instances/types
+// These imports are for classes defined below, so they don't need package update.
 import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertSame
 // import org.junit.Assert.assertTrue // Not used directly, can be removed if no other assertions need it.
@@ -36,7 +38,7 @@ private object CacheTestProto2Serializer : Serializer<CacheTestProto2> {
 class NewDataStoreTest {
 
     private lateinit var mockContext: Context
-    private lateinit var newDataStore: NewDataStore
+    private lateinit var newDataStore: NewDataStore // This will be com.abbasnaqdi.core.NewDataStore
 
     @Before
     fun setUp() {
@@ -62,7 +64,7 @@ class NewDataStoreTest {
         every { mockContext.dataStoreFile(any()) } answers { File(baseFileDir, firstArg<String>()) }
 
 
-        newDataStore = NewDataStore(mockContext)
+        newDataStore = com.abbasnaqdi.core.NewDataStore(mockContext) // Explicitly use the new package
         newDataStore.clearCaches() // Ensure clean state before each test
     }
 

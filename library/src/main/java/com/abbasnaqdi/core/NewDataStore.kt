@@ -1,9 +1,9 @@
-package com.example.newdatastorelib.core
+package com.abbasnaqdi.core // Updated package
 
 import android.content.Context
 import androidx.datastore.core.Serializer
-import com.example.newdatastorelib.preferences.PreferencesHandler
-import com.example.newdatastorelib.proto.ProtoHandler
+import com.abbasnaqdi.preferences.PreferencesHandler // Updated import
+import com.abbasnaqdi.proto.ProtoHandler // Updated import
 import java.util.concurrent.ConcurrentHashMap
 
 class NewDataStore(private val appContext: Context) {
