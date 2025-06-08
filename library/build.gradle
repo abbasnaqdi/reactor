@@ -44,6 +44,18 @@ android {
 }
 
 dependencies {
+    // DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
-    implementation "androidx.security:security-crypto:1.1.0-alpha06"
+    implementation "androidx.datastore:datastore-proto:1.0.0"
+    // Security for encryption
+    implementation "androidx.security:security-crypto:1.0.0" // Using 1.0.0 as a stable release
+
+    // Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1"
+
+    // Testing
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "io.mockk:mockk:1.13.5"
+    androidTestImplementation "junit:junit:4.13.2" // For potential Android tests
+    androidTestImplementation "io.mockk:mockk-android:1.13.5" // For potential Android tests
 }
