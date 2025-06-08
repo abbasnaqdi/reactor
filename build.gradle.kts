@@ -15,7 +15,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.2.2") // Consider updating AGP version
+        classpath("com.android.tools.build:gradle:8.4.1")
         classpath(kotlin("gradle-plugin", version = "2.0.0")) // Consider updating Kotlin plugin version
     }
 }
