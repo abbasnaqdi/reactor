@@ -8,6 +8,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+// Make sure these imports are present for key creation
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.doublePreferencesKey
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import kotlinx.coroutines.Dispatchers
@@ -21,11 +29,11 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import kotlin.Result
 
-interface PrefsOperations { // Keep as is
-    suspend fun <T> putValue(key: Preferences.Key<T>, value: T)
-    suspend fun <T> removeValue(key: Preferences.Key<T>)
-    fun <T> getValueFlow(key: Preferences.Key<T>, defaultValue: T?): Flow<T?>
-    suspend fun <T> readValueOnce(key: Preferences.Key<T>, defaultValue: T?): Result<T?>
+interface PrefsOperations {
+    suspend fun <T : Any> putValue(name: String, value: T) // Type T of value used to determine Preferences.Key<T>
+    suspend fun <T : Any> removeValue(name: String, type: Class<T>) // Explicit type for removal
+    fun <T : Any> getValueFlow(name: String, type: Class<T>, defaultValue: T?): Flow<T?>
+    suspend fun <T : Any> readValueOnce(name: String, type: Class<T>, defaultValue: T?): Result<T?>
     suspend fun clearAll()
 }
 
@@ -55,10 +63,24 @@ class PreferencesHandler(
         }
     }
 
-    suspend fun <T> put(key: Preferences.Key<T>, value: T) = operations.putValue(key, value)
-    suspend fun <T> remove(key: Preferences.Key<T>) = operations.removeValue(key)
-    fun <T> get(key: Preferences.Key<T>, defaultValue: T? = null): Flow<T?> = operations.getValueFlow(key, defaultValue)
-    suspend fun <T> readOnce(key: Preferences.Key<T>, defaultValue: T? = null): Result<T?> = operations.readValueOnce(key, defaultValue)
+    suspend inline fun <reified T : Any> put(name: String, value: T) {
+        // The implementation of PrefsOperations.putValue will handle type checking and key creation.
+        operations.putValue(name, value)
+    }
+
+    suspend inline fun <reified T : Any> remove(name: String) {
+        operations.removeValue(name, T::class.java)
+    }
+
+    inline fun <reified T : Any> get(name: String, defaultValue: T? = null): Flow<T?> {
+        return operations.getValueFlow(name, T::class.java, defaultValue)
+    }
+
+    suspend inline fun <reified T : Any> readOnce(name: String, defaultValue: T? = null): Result<T?> {
+        return operations.readValueOnce(name, T::class.java, defaultValue)
+    }
+
+    // clear() method remains the same:
     suspend fun clear() = operations.clearAll()
 }
 
@@ -66,15 +88,56 @@ class PreferencesHandler(
 internal class DataStorePrefsOperations(
     private val dataStore: DataStore<Preferences>
 ) : PrefsOperations {
-    override suspend fun <T> putValue(key: Preferences.Key<T>, value: T) {
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T : Any> getKeyForType(name: String, type: Class<T>): Preferences.Key<T> {
+        return when (type) {
+            Integer::class.java, Int::class.java -> intPreferencesKey(name) as Preferences.Key<T>
+            java.lang.Long::class.java, Long::class.java -> longPreferencesKey(name) as Preferences.Key<T>
+            java.lang.Float::class.java, Float::class.java -> floatPreferencesKey(name) as Preferences.Key<T>
+            java.lang.Double::class.java, Double::class.java -> doublePreferencesKey(name) as Preferences.Key<T>
+            java.lang.Boolean::class.java, Boolean::class.java -> booleanPreferencesKey(name) as Preferences.Key<T>
+            String::class.java -> stringPreferencesKey(name) as Preferences.Key<T>
+            Set::class.java -> stringSetPreferencesKey(name) as Preferences.Key<T> // Assumes Set<String>
+            else -> throw IllegalArgumentException("Unsupported type for DataStore Preferences: ${type.name}")
+        }
+    }
+
+    // Helper for putValue where type is inferred from value
+    @Suppress("UNCHECKED_CAST")
+    private fun <T : Any> getKeyForValue(name: String, value: T): Preferences.Key<T> {
+         return when (value) {
+            is Int -> intPreferencesKey(name) as Preferences.Key<T>
+            is Long -> longPreferencesKey(name) as Preferences.Key<T>
+            is Float -> floatPreferencesKey(name) as Preferences.Key<T>
+            is Double -> doublePreferencesKey(name) as Preferences.Key<T>
+            is Boolean -> booleanPreferencesKey(name) as Preferences.Key<T>
+            is String -> stringPreferencesKey(name) as Preferences.Key<T>
+            is Set<*> -> {
+                // Ensure all elements are String for Set, as DataStore Preferences only supports Set<String>
+                if (value.all { it is String }) {
+                    stringSetPreferencesKey(name) as Preferences.Key<T>
+                } else {
+                    throw IllegalArgumentException("Only Set<String> is supported for DataStore Preferences. Found: Set<${value.firstOrNull()?.javaClass?.simpleName}>")
+                }
+            }
+            else -> throw IllegalArgumentException("Unsupported type for DataStore Preferences: ${value::class.java.name}")
+        }
+    }
+
+
+    override suspend fun <T : Any> putValue(name: String, value: T) {
+        val key = getKeyForValue(name, value)
         dataStore.edit { prefs -> prefs[key] = value }
     }
 
-    override suspend fun <T> removeValue(key: Preferences.Key<T>) {
+    override suspend fun <T : Any> removeValue(name: String, type: Class<T>) {
+        val key = getKeyForType(name, type)
         dataStore.edit { prefs -> prefs.remove(key) }
     }
 
-    override fun <T> getValueFlow(key: Preferences.Key<T>, defaultValue: T?): Flow<T?> {
+    override fun <T : Any> getValueFlow(name: String, type: Class<T>, defaultValue: T?): Flow<T?> {
+        val key = getKeyForType(name, type)
         return dataStore.data
             .catch { exception ->
                 if (exception is IOException) emit(emptyPreferences()) else throw exception
@@ -82,13 +145,10 @@ internal class DataStorePrefsOperations(
             .map { preferences -> preferences[key] ?: defaultValue }
     }
 
-    override suspend fun <T> readValueOnce(key: Preferences.Key<T>, defaultValue: T?): Result<T?> {
+    override suspend fun <T : Any> readValueOnce(name: String, type: Class<T>, defaultValue: T?): Result<T?> {
         return try {
-            // Make sure to catch exceptions on data.first() itself if flow is cold and might fail on collection
-            val preferences = dataStore.data.catch { exception ->
-                 if (exception is IOException) emit(emptyPreferences()) else throw exception
-            }.first()
-            Result.success(preferences[key] ?: defaultValue)
+            val key = getKeyForType(name, type)
+            Result.success(dataStore.data.first()[key] ?: defaultValue)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -103,13 +163,13 @@ internal class DataStorePrefsOperations(
 internal class EncryptedPrefsOperations(
     private val sharedPreferences: SharedPreferences
 ) : PrefsOperations {
-    private fun <T> getKeyName(key: Preferences.Key<T>): String = key.name // Keep as is
+    private fun getKeyNameFromString(name: String): String = name // Simplified, was getKeyName(key: Preferences.Key<T>)
 
     @Suppress("UNCHECKED_CAST")
-    override suspend fun <T> putValue(key: Preferences.Key<T>, value: T) {
+    override suspend fun <T : Any> putValue(name: String, value: T) { // name is already String
         withContext(Dispatchers.IO) {
             sharedPreferences.edit().apply {
-                val keyName = getKeyName(key)
+                val keyName = getKeyNameFromString(name)
                 when (value) {
                     is Int -> putInt(keyName, value)
                     is Long -> putLong(keyName, value)
@@ -123,41 +183,38 @@ internal class EncryptedPrefsOperations(
                             throw IllegalArgumentException("Only Set<String> is supported for SharedPreferences.")
                         }
                     }
-                    else -> throw IllegalArgumentException("Unsupported type for SharedPreferences: ${value!!::class.java.name}")
+                    else -> throw IllegalArgumentException("Unsupported type for SharedPreferences: ${value::class.java.name}")
                 }
             }.apply()
         }
     }
 
-    override suspend fun <T> removeValue(key: Preferences.Key<T>) {
+    override suspend fun <T : Any> removeValue(name: String, type: Class<T>) { // Added 'type' but it's not strictly needed for remove by name
         withContext(Dispatchers.IO) {
-            sharedPreferences.edit().remove(getKeyName(key)).apply()
+            sharedPreferences.edit().remove(getKeyNameFromString(name)).apply()
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> getValueFlow(key: Preferences.Key<T>, defaultValue: T?): Flow<T?> {
+    override fun <T : Any> getValueFlow(name: String, type: Class<T>, defaultValue: T?): Flow<T?> {
         return callbackFlow {
             withContext(Dispatchers.IO) {
-                val keyName = getKeyName(key)
+                val keyName = getKeyNameFromString(name)
                 val value: Any? = if (sharedPreferences.contains(keyName)) {
-                     when (defaultValue) {
-                        is Int -> sharedPreferences.getInt(keyName, defaultValue)
-                        is Long -> sharedPreferences.getLong(keyName, defaultValue)
-                        is Float -> sharedPreferences.getFloat(keyName, defaultValue)
-                        is Boolean -> sharedPreferences.getBoolean(keyName, defaultValue)
-                        is String -> sharedPreferences.getString(keyName, defaultValue)
-                        is Set<*> -> sharedPreferences.getStringSet(keyName, defaultValue as? Set<String>)
+                    when (type) { // Use the provided 'type' parameter
+                        Integer::class.java, Int::class.java -> sharedPreferences.getInt(keyName, defaultValue as? Int ?: 0)
+                        java.lang.Long::class.java, Long::class.java -> sharedPreferences.getLong(keyName, defaultValue as? Long ?: 0L)
+                        java.lang.Float::class.java, Float::class.java -> sharedPreferences.getFloat(keyName, defaultValue as? Float ?: 0f)
+                        java.lang.Boolean::class.java, Boolean::class.java -> sharedPreferences.getBoolean(keyName, defaultValue as? Boolean ?: false)
+                        String::class.java -> sharedPreferences.getString(keyName, defaultValue as? String)
+                        Set::class.java -> sharedPreferences.getStringSet(keyName, defaultValue as? Set<String>) // Assumes Set<String>
                         else -> {
-                            val tempDefault = key.getDefaultValueBasedOnKeyNameOrHeuristic(defaultValue) // Pass defaultValue
-                            when (tempDefault) {
-                                is Int -> sharedPreferences.getInt(keyName, tempDefault)
-                                is Long -> sharedPreferences.getLong(keyName, tempDefault)
-                                is Float -> sharedPreferences.getFloat(keyName, tempDefault)
-                                is Boolean -> sharedPreferences.getBoolean(keyName, tempDefault)
-                                is String -> sharedPreferences.getString(keyName, tempDefault)
-                                // Set<String> case is tricky without a non-null Set default
-                                else -> if (defaultValue == null) null else throw IllegalArgumentException("Unsupported type for key $keyName without a typed defaultValue")
+                            if (defaultValue != null && type.isAssignableFrom(defaultValue.javaClass)) {
+                                defaultValue // Fallback to defaultValue if type is unknown but defaultValue matches
+                            } else {
+                                // Cannot infer type if defaultValue is null and type is exotic
+                                // Or throw: throw IllegalArgumentException("Unsupported type for SharedPreferences: ${type.name}")
+                                null
                             }
                         }
                     }
@@ -166,44 +223,29 @@ internal class EncryptedPrefsOperations(
                 }
                 trySend(value as? T)
             }
-            awaitClose { }
+            awaitClose { /* No resources to free */ }
         }
     }
 
-    // Adjusted helper to make a more informed guess, though still limited.
-    private fun <T> Preferences.Key<T>.getDefaultValueBasedOnKeyNameOrHeuristic(currentDefaultValue: T?): Any? {
-        if (currentDefaultValue != null) return currentDefaultValue // Prefer explicit default
-        // Example heuristic (very basic, expand as needed):
-        // This is where knowing the *expected type* of T for this key is crucial if currentDefaultValue is null.
-        // Since Preferences.Key is generic and T is erased, this is a fundamental challenge.
-        // If this key is known to be, e.g., an Int key by convention even if `defaultValue` is `null`,
-        // then `0` could be returned. Without such conventions, it's hard.
-        // For this example, we'll stick to null if currentDefaultValue is null.
-        return null
-    }
-
     @Suppress("UNCHECKED_CAST")
-    override suspend fun <T> readValueOnce(key: Preferences.Key<T>, defaultValue: T?): Result<T?> {
+    override suspend fun <T : Any> readValueOnce(name: String, type: Class<T>, defaultValue: T?): Result<T?> {
         return withContext(Dispatchers.IO) {
             try {
-                val keyName = getKeyName(key)
+                val keyName = getKeyNameFromString(name)
                 val value: Any? = if (sharedPreferences.contains(keyName)) {
-                    when (defaultValue) {
-                        is Int -> sharedPreferences.getInt(keyName, defaultValue)
-                        is Long -> sharedPreferences.getLong(keyName, defaultValue)
-                        is Float -> sharedPreferences.getFloat(keyName, defaultValue)
-                        is Boolean -> sharedPreferences.getBoolean(keyName, defaultValue)
-                        is String -> sharedPreferences.getString(keyName, defaultValue)
-                        is Set<*> -> sharedPreferences.getStringSet(keyName, defaultValue as? Set<String>)
-                         else -> {
-                            val tempDefault = key.getDefaultValueBasedOnKeyNameOrHeuristic(defaultValue)
-                             when (tempDefault) {
-                                is Int -> sharedPreferences.getInt(keyName, tempDefault)
-                                is Long -> sharedPreferences.getLong(keyName, tempDefault)
-                                is Float -> sharedPreferences.getFloat(keyName, tempDefault)
-                                is Boolean -> sharedPreferences.getBoolean(keyName, tempDefault)
-                                is String -> sharedPreferences.getString(keyName, tempDefault)
-                                else -> if (defaultValue == null) null else throw IllegalArgumentException("Unsupported type for key $keyName without a typed defaultValue")
+                     when (type) { // Use the provided 'type' parameter
+                        Integer::class.java, Int::class.java -> sharedPreferences.getInt(keyName, defaultValue as? Int ?: 0)
+                        java.lang.Long::class.java, Long::class.java -> sharedPreferences.getLong(keyName, defaultValue as? Long ?: 0L)
+                        java.lang.Float::class.java, Float::class.java -> sharedPreferences.getFloat(keyName, defaultValue as? Float ?: 0f)
+                        java.lang.Boolean::class.java, Boolean::class.java -> sharedPreferences.getBoolean(keyName, defaultValue as? Boolean ?: false)
+                        String::class.java -> sharedPreferences.getString(keyName, defaultValue as? String)
+                        Set::class.java -> sharedPreferences.getStringSet(keyName, defaultValue as? Set<String>) // Assumes Set<String>
+                        else -> {
+                            if (defaultValue != null && type.isAssignableFrom(defaultValue.javaClass)) {
+                                defaultValue
+                            } else {
+                                // Or throw: throw IllegalArgumentException("Unsupported type for SharedPreferences: ${type.name}")
+                                null
                             }
                         }
                     }
@@ -216,6 +258,7 @@ internal class EncryptedPrefsOperations(
             }
         }
     }
+
     override suspend fun clearAll() {
         withContext(Dispatchers.IO) {
             sharedPreferences.edit().clear().apply()

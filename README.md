@@ -54,78 +54,76 @@ val prefsHandler = dataStoreManager.preferences(name = "my_app_settings", encryp
 val securePrefsHandler = dataStoreManager.preferences(name = "my_secure_settings", encrypted = true)
 ```
 
-**2. Define Keys:**
+**2. Saving Data (`put`):**
 
-Use `androidx.datastore.preferences.core` key factories:
-
-```kotlin
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.booleanPreferencesKey
-
-val USER_NAME_KEY = stringPreferencesKey("user_name")
-val LOGIN_COUNT_KEY = intPreferencesKey("login_count")
-val IS_SUBSCRIBED_KEY = booleanPreferencesKey("is_subscribed")
-```
-
-**3. Saving Data (`put`):**
-
-`put` is a suspend function.
+`put` is a suspend function. The type of the value is used by the library to store it appropriately.
 
 ```kotlin
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking // Or use a CoroutineScope
+// import kotlinx.coroutines.runBlocking // Or use a CoroutineScope
 
 // Inside a coroutine scope
 scope.launch {
-    prefsHandler.put(USER_NAME_KEY, "Jane Doe")
-    securePrefsHandler.put(LOGIN_COUNT_KEY, 5)
+    prefsHandler.put("user_name", "Jane Doe") // String
+    prefsHandler.put("login_count", 5)      // Int
+    securePrefsHandler.put("is_subscribed", true) // Boolean
+    prefsHandler.put("feature_flags", setOf("alpha", "beta")) // Set<String>
 }
 ```
 
-**4. Reading Data (`get` Flow):**
+**3. Reading Data (`get` Flow):**
 
-`get` returns a `Flow<T?>` that emits when the data changes.
+`get<T>` returns a `Flow<T?>` that emits when the data changes. You must specify the expected type using reified generics.
 
 ```kotlin
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.map // Not strictly needed for direct get, but often used with flows
 import androidx.lifecycle.compose.collectAsStateWithLifecycle // For Compose UI
 
 // In your ViewModel or Composable:
-val userNameFlow: Flow<String?> = prefsHandler.get(USER_NAME_KEY, "Default User") // With default
-val loginCountFlow: Flow<Int?> = securePrefsHandler.get(LOGIN_COUNT_KEY)         // Nullable
+val userNameFlow: Flow<String?> = prefsHandler.get<String>("user_name", "Default User")
+val loginCountFlow: Flow<Int?> = prefsHandler.get<Int>("login_count")
+val isSubscribedFlow: Flow<Boolean?> = securePrefsHandler.get<Boolean>("is_subscribed", false)
+val featureFlagsFlow: Flow<Set<String>?> = prefsHandler.get<Set<String>>("feature_flags", emptySet())
+
 
 // Example in a Composable
 val userName by userNameFlow.collectAsStateWithLifecycle()
 Text("User: ${userName ?: "Not set"}")
 ```
 
-**5. Reading Data Once (`readOnce`):**
+**4. Reading Data Once (`readOnce`):**
 
-`readOnce` is a suspend function that returns `Result<T?>`.
+`readOnce<T>` is a suspend function that returns `Result<T?>`. You must specify the expected type using reified generics.
 
 ```kotlin
 scope.launch {
-    val nameResult = prefsHandler.readOnce(USER_NAME_KEY, "Guest")
+    val nameResult = prefsHandler.readOnce<String>("user_name", "Guest")
     nameResult.onSuccess { name ->
         println("Current user: ${name ?: "Not available"}")
     }.onFailure { exception ->
         println("Failed to read user name: $exception")
     }
+
+    val flagsResult = prefsHandler.readOnce<Set<String>>("feature_flags")
+    flagsResult.onSuccess { flags ->
+        println("Feature flags: ${flags ?: "Not set"}")
+    }
 }
 ```
 
-**6. Removing Data (`remove`):**
+**5. Removing Data (`remove`):**
 
-`remove` is a suspend function.
+`remove<T>` is a suspend function. You need to specify the expected type of the key using reified generics to ensure the correct underlying `Preferences.Key` is targeted for removal.
 
 ```kotlin
 scope.launch {
-    prefsHandler.remove(USER_NAME_KEY)
+    prefsHandler.remove<String>("user_name")
+    prefsHandler.remove<Int>("login_count")
+    prefsHandler.remove<Set<String>>("feature_flags")
 }
 ```
 
-**7. Clearing All Preferences in a Handler (`clear`):**
+**6. Clearing All Preferences in a Handler (`clear`):**
 
 `clear` is a suspend function.
 
