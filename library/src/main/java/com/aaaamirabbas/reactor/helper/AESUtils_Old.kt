@@ -10,14 +10,14 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
 
-object AESUtils {
+object AESUtils_Old { // Renamed object
 
     private val AES_MODE = "AES/CBC/PKCS7Padding"
     private val HASH_ALGORITHM = "SHA-256"
     private val ivBytes = byteArrayOf(
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-    )
+    ) // Keep the original hardcoded IV
 
     @Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
     private fun generateKey(password: String): SecretKeySpec {
@@ -52,7 +52,6 @@ object AESUtils {
 
     @Throws(GeneralSecurityException::class)
     fun decrypt(password: String, base64EncodedCipherText: String): String {
-
         try {
             val key = generateKey(password)
             val decodedCipherText = Base64.decode(base64EncodedCipherText, Base64.NO_WRAP)
@@ -78,6 +77,8 @@ object AESUtils {
         return cipher.doFinal(decodedCipherText)
     }
 
+    // bytesToHex is not strictly needed for decryption, can be omitted if desired
+    // but keeping it for completeness of restoring the old file's content.
     private fun bytesToHex(bytes: ByteArray): String {
         val hexArray = charArrayOf(
             '0', '1', '2', '3', '4', '5', '6',
