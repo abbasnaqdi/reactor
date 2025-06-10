@@ -1,16 +1,15 @@
-package com.abbasnaqdi.core // Updated package
+package com.abbasnaqdi.core // Ensure package is correct
 
 import android.content.Context
+import androidx.datastore.core.DataMigration // Add import
 import androidx.datastore.core.Serializer
-import com.abbasnaqdi.preferences.PreferencesHandler // Updated import
-import com.abbasnaqdi.proto.ProtoHandler // Updated import
+import androidx.datastore.preferences.core.Preferences // Add import
+// com.abbasnaqdi.preferences.PreferencesHandler and com.abbasnaqdi.proto.ProtoHandler are classes under test via NewDataStore
 import io.mockk.every
 import io.mockk.mockk
-// Minimal Proto classes for testing caching with different serializer instances/types
-// These imports are for classes defined below, so they don't need package update.
 import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertSame
-// import org.junit.Assert.assertTrue // Not used directly, can be removed if no other assertions need it.
+// import org.junit.Assert.assertTrue // Not used in this snippet, but fine if present
 import org.junit.Before
 import org.junit.Test
 import java.io.File
@@ -19,18 +18,19 @@ import java.io.OutputStream
 import androidx.datastore.preferences.preferencesDataStoreFile // For mocking context extension
 import androidx.datastore.dataStoreFile // For mocking context extension
 
-// Minimal Proto classes for testing caching with different serializer instances/types
+
+// Minimal Proto classes for testing caching (remain the same)
 private data class CacheTestProto1(val id: Int = 0)
 private object CacheTestProto1Serializer : Serializer<CacheTestProto1> {
     override val defaultValue: CacheTestProto1 = CacheTestProto1()
-    override suspend fun readFrom(input: InputStream): CacheTestProto1 = CacheTestProto1(try { input.read() } catch (e: Exception) {0}) // Basic read
+    override suspend fun readFrom(input: InputStream): CacheTestProto1 = CacheTestProto1(try{input.read()}catch(e: Exception){0})
     override suspend fun writeTo(t: CacheTestProto1, output: OutputStream) = output.write(t.id)
 }
 
 private data class CacheTestProto2(val name: String = "")
 private object CacheTestProto2Serializer : Serializer<CacheTestProto2> {
     override val defaultValue: CacheTestProto2 = CacheTestProto2()
-    override suspend fun readFrom(input: InputStream): CacheTestProto2 = CacheTestProto2(try {input.bufferedReader().readLine() ?: ""} catch (e: Exception) {""}) // Basic read
+    override suspend fun readFrom(input: InputStream): CacheTestProto2 = CacheTestProto2(try{input.bufferedReader().readLine() ?: ""}catch(e:Exception){""})
     override suspend fun writeTo(t: CacheTestProto2, output: OutputStream) = output.write(t.name.toByteArray())
 }
 
@@ -38,115 +38,138 @@ private object CacheTestProto2Serializer : Serializer<CacheTestProto2> {
 class NewDataStoreTest {
 
     private lateinit var mockContext: Context
-    private lateinit var newDataStore: NewDataStore // This will be com.abbasnaqdi.core.NewDataStore
+    private lateinit var newDataStore: NewDataStore // Instance for testing instance methods
+
+    private val emptyPrefsMigrations: List<DataMigration<Preferences>> = emptyList()
+    private val emptyProto1Migrations: List<DataMigration<CacheTestProto1>> = emptyList()
+    private val emptyProto2Migrations: List<DataMigration<CacheTestProto2>> = emptyList()
+
 
     @Before
     fun setUp() {
         mockContext = mockk(relaxed = true)
-        // Mock appContext.preferencesDataStoreFile and appContext.dataStoreFile
-        // to return unique file paths to avoid issues if DataStore instances were actually created.
-        // Although for caching tests, actual DataStore creation might not happen if mocks are used,
-        // it's good practice for context mocking.
+        every { mockContext.applicationContext } returns mockContext // Important for NewDataStore.initializeDefaultInstance
 
-        // It's important to mock the extension functions on Context correctly.
-        // We need to ensure that the `Context` instance used by `NewDataStore` is the one we're mocking.
         val baseFileDir = File("test_files_dir")
-        if (!baseFileDir.exists()) baseFileDir.mkdirs() // Ensure dir exists for File creations
+        if (!baseFileDir.exists()) baseFileDir.mkdirs()
 
-        every { mockContext.applicationContext } returns mockContext
-        every { mockContext.filesDir } returns baseFileDir // Though not directly used by datastore extensions
-
-        // For Preferences: appContext.preferencesDataStoreFile(name)
-        // The extension function is preferencesDataStoreFile(this Context, String)
-        // We need to mock it for the specific mockContext instance.
         every { mockContext.preferencesDataStoreFile(any()) } answers { File(baseFileDir, firstArg<String>() + ".preferences_pb") }
-        // For Proto: appContext.dataStoreFile(fileName)
         every { mockContext.dataStoreFile(any()) } answers { File(baseFileDir, firstArg<String>()) }
 
+        // Initialize default instance for testing companion methods too
+        NewDataStore.initializeDefaultInstance(mockContext) // Uses applicationContext
+        newDataStore = NewDataStore(mockContext) // For testing instance methods
 
-        newDataStore = com.abbasnaqdi.core.NewDataStore(mockContext) // Explicitly use the new package
-        newDataStore.clearCaches() // Ensure clean state before each test
+        // Clear caches for both default and specific instance
+        NewDataStore.clearDefaultInstanceCaches()
+        newDataStore.clearCaches()
+    }
+
+    // --- Instance method tests ---
+    @Test
+    fun `preferences returns cached instance for same name, encryption, and migrations (instance)`() {
+        val handler1 = newDataStore.preferences("prefsA", false, emptyPrefsMigrations)
+        val handler2 = newDataStore.preferences("prefsA", false, emptyPrefsMigrations)
+        assertSame("Expected same instance for same params", handler1, handler2)
     }
 
     @Test
-    fun `preferences returns cached instance for same name and encryption status`() {
-        val handler1 = newDataStore.preferences("prefsA", false)
-        val handler2 = newDataStore.preferences("prefsA", false)
-        assertSame("Expected same instance for same name and unencrypted", handler1, handler2)
-
-        val handler3 = newDataStore.preferences("prefsB", true)
-        val handler4 = newDataStore.preferences("prefsB", true)
-        assertSame("Expected same instance for same name and encrypted", handler3, handler4)
-    }
-
-    @Test
-    fun `preferences returns different instances for different names`() {
-        val handler1 = newDataStore.preferences("prefsX", false)
-        val handler2 = newDataStore.preferences("prefsY", false)
-        assertNotSame("Expected different instances for different names (unencrypted)", handler1, handler2)
-
-        val handler3 = newDataStore.preferences("prefsX", true)
-        val handler4 = newDataStore.preferences("prefsY", true)
-        assertNotSame("Expected different instances for different names (encrypted)", handler3, handler4)
-    }
-
-    @Test
-    fun `preferences returns different instances for different encryption statuses`() {
-        val handler1 = newDataStore.preferences("prefsZ", false)
-        val handler2 = newDataStore.preferences("prefsZ", true)
-        assertNotSame("Expected different instances for different encryption statuses", handler1, handler2)
-    }
-
-    @Test
-    fun `proto returns cached instance for same params`() {
-        val handler1 = newDataStore.proto(CacheTestProto1Serializer, "protoA.pb", false)
-        val handler2 = newDataStore.proto(CacheTestProto1Serializer, "protoA.pb", false)
-        assertSame("Expected same ProtoHandler instance for same params (unencrypted)", handler1, handler2)
-
-        val handler3 = newDataStore.proto(CacheTestProto2Serializer, "protoB.pb", true)
-        val handler4 = newDataStore.proto(CacheTestProto2Serializer, "protoB.pb", true)
-        assertSame("Expected same ProtoHandler instance for same params (encrypted)", handler3, handler4)
-    }
-
-    @Test
-    fun `proto returns different instances for different filenames`() {
-        val handler1 = newDataStore.proto(CacheTestProto1Serializer, "protoX.pb", false)
-        val handler2 = newDataStore.proto(CacheTestProto1Serializer, "protoY.pb", false)
+    fun `preferences returns different instances for different names (instance)`() {
+        val handler1 = newDataStore.preferences("prefsX", false, emptyPrefsMigrations)
+        val handler2 = newDataStore.preferences("prefsY", false, emptyPrefsMigrations)
         assertNotSame(handler1, handler2)
     }
 
     @Test
-    fun `proto returns different instances for different serializers (classes)`() {
-        // Cache key uses serializer.javaClass.name
-        val handler1 = newDataStore.proto(CacheTestProto1Serializer, "common.pb", false)
-        val handler2 = newDataStore.proto(CacheTestProto2Serializer, "common.pb", false) // Same filename, different serializer
-        assertNotSame("Expected different instances for different serializer types", handler1, handler2)
+    fun `preferences returns different instances for different encryption (instance)`() {
+        val handler1 = newDataStore.preferences("prefsSameName", false, emptyPrefsMigrations)
+        val handler2 = newDataStore.preferences("prefsSameName", true, emptyPrefsMigrations)
+        assertNotSame(handler1, handler2)
+    }
+
+
+    @Test
+    fun `proto returns cached instance for same params (instance)`() {
+        val handler1 = newDataStore.proto(CacheTestProto1Serializer, "protoA.pb", false, emptyProto1Migrations)
+        val handler2 = newDataStore.proto(CacheTestProto1Serializer, "protoA.pb", false, emptyProto1Migrations)
+        assertSame(handler1, handler2)
     }
 
     @Test
-    fun `proto returns different instances for different encryption statuses`() {
-        val handler1 = newDataStore.proto(CacheTestProto1Serializer, "common_enc.pb", false)
-        val handler2 = newDataStore.proto(CacheTestProto1Serializer, "common_enc.pb", true)
+    fun `proto returns different instances for different filenames (instance)`() {
+        val handler1 = newDataStore.proto(CacheTestProto1Serializer, "protoX.pb", false, emptyProto1Migrations)
+        val handler2 = newDataStore.proto(CacheTestProto1Serializer, "protoY.pb", false, emptyProto1Migrations)
         assertNotSame(handler1, handler2)
     }
 
     @Test
-    fun `clearCaches allows new instances to be created`() {
-        val prefsHandler1 = newDataStore.preferences("cache_test_prefs", false)
-        val protoHandler1 = newDataStore.proto(CacheTestProto1Serializer, "cache_test_proto.pb", false)
+    fun `proto returns different instances for different serializers (instance)`() {
+        val handler1 = newDataStore.proto(CacheTestProto1Serializer, "common.pb", false, emptyProto1Migrations)
+        val handler2 = newDataStore.proto(CacheTestProto2Serializer, "common.pb", false, emptyProto2Migrations) // Different serializer, different migration list type
+        assertNotSame(handler1, handler2)
+    }
+
+    @Test
+    fun `proto returns different instances for different encryption (instance)`() {
+        val handler1 = newDataStore.proto(CacheTestProto1Serializer, "common_enc.pb", false, emptyProto1Migrations)
+        val handler2 = newDataStore.proto(CacheTestProto1Serializer, "common_enc.pb", true, emptyProto1Migrations)
+        assertNotSame(handler1, handler2)
+    }
+
+    @Test
+    fun `clearCaches allows new instances to be created (instance)`() {
+        val prefsHandler1 = newDataStore.preferences("cache_test_prefs", false, emptyPrefsMigrations)
+        val protoHandler1 = newDataStore.proto(CacheTestProto1Serializer, "cache_test_proto.pb", false, emptyProto1Migrations)
 
         newDataStore.clearCaches()
 
-        val prefsHandler2 = newDataStore.preferences("cache_test_prefs", false)
-        val protoHandler2 = newDataStore.proto(CacheTestProto1Serializer, "cache_test_proto.pb", false)
+        val prefsHandler2 = newDataStore.preferences("cache_test_prefs", false, emptyPrefsMigrations)
+        val protoHandler2 = newDataStore.proto(CacheTestProto1Serializer, "cache_test_proto.pb", false, emptyProto1Migrations)
 
-        assertNotSame("PreferencesHandler should be a new instance after clearing cache", prefsHandler1, prefsHandler2)
-        assertNotSame("ProtoHandler should be a new instance after clearing cache", protoHandler1, protoHandler2)
+        assertNotSame("PreferencesHandler should be a new instance after clearing cache (instance)", prefsHandler1, prefsHandler2)
+        assertNotSame("ProtoHandler should be a new instance after clearing cache (instance)", protoHandler1, protoHandler2)
+    }
 
-        // Verify that caching still works after clearing and getting new instances
-        val prefsHandler3 = newDataStore.preferences("cache_test_prefs", false)
-        val protoHandler3 = newDataStore.proto(CacheTestProto1Serializer, "cache_test_proto.pb", false)
-        assertSame(prefsHandler2, prefsHandler3)
-        assertSame(protoHandler2, protoHandler3)
+    // --- Companion object (default instance) method tests ---
+    @Test
+    fun `getDefaultPreferences returns cached instance`() {
+        val handler1 = NewDataStore.getDefaultPreferences("prefsDefaultA", false, emptyPrefsMigrations)
+        val handler2 = NewDataStore.getDefaultPreferences("prefsDefaultA", false, emptyPrefsMigrations)
+        assertSame("Expected same instance for default prefs with same params", handler1, handler2)
+    }
+
+    @Test
+    fun `getDefaultPreferences returns different for different names`() {
+        val handler1 = NewDataStore.getDefaultPreferences("prefsDefaultX", false, emptyPrefsMigrations)
+        val handler2 = NewDataStore.getDefaultPreferences("prefsDefaultY", false, emptyPrefsMigrations)
+        assertNotSame("Expected different instances for default prefs with different names", handler1, handler2)
+    }
+
+    @Test
+    fun `getDefaultProtoStore returns cached instance`() {
+        val handler1 = NewDataStore.getDefaultProtoStore(CacheTestProto1Serializer, "protoDefaultA.pb", false, emptyProto1Migrations)
+        val handler2 = NewDataStore.getDefaultProtoStore(CacheTestProto1Serializer, "protoDefaultA.pb", false, emptyProto1Migrations)
+        assertSame("Expected same instance for default proto with same params", handler1, handler2)
+    }
+
+    @Test
+    fun `getDefaultProtoStore returns different for different filenames`() {
+        val handler1 = NewDataStore.getDefaultProtoStore(CacheTestProto1Serializer, "protoDefaultX.pb", false, emptyProto1Migrations)
+        val handler2 = NewDataStore.getDefaultProtoStore(CacheTestProto1Serializer, "protoDefaultY.pb", false, emptyProto1Migrations)
+        assertNotSame("Expected different instances for default proto with different filenames", handler1, handler2)
+    }
+
+    @Test
+    fun `clearDefaultInstanceCaches allows new instances for default`() {
+        val handler1 = NewDataStore.getDefaultPreferences("cache_default_prefs", false, emptyPrefsMigrations)
+        val protoHandler1 = NewDataStore.getDefaultProtoStore(CacheTestProto1Serializer, "cache_default_proto.pb", false, emptyProto1Migrations)
+
+        NewDataStore.clearDefaultInstanceCaches()
+
+        val handler2 = NewDataStore.getDefaultPreferences("cache_default_prefs", false, emptyPrefsMigrations)
+        val protoHandler2 = NewDataStore.getDefaultProtoStore(CacheTestProto1Serializer, "cache_default_proto.pb", false, emptyProto1Migrations)
+
+        assertNotSame("Default PreferencesHandler should be new after clearing default cache", handler1, handler2)
+        assertNotSame("Default ProtoHandler should be new after clearing default cache", protoHandler1, protoHandler2)
     }
 }

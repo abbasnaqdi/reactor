@@ -38,6 +38,39 @@ import com.abbasnaqdi.core.NewDataStore
 val dataStoreManager = NewDataStore(applicationContext)
 ```
 
+## Default Instance (Singleton Access)
+
+For applications that primarily use a single set of DataStore configurations, you can initialize a default instance of `NewDataStore` for easier access throughout your app.
+
+**1. Initialize in your Application class:**
+
+```kotlin
+// In your Application's onCreate()
+import com.abbasnaqdi.core.NewDataStore
+import android.app.Application // Import Application
+
+class MyApplication : Application() { // Extend Application
+    override fun onCreate() {
+        super.onCreate()
+        NewDataStore.initializeDefaultInstance(this)
+    }
+}
+```
+
+**2. Access default stores anywhere:**
+
+```kotlin
+// Get default unencrypted preferences
+val defaultPrefsHandler = NewDataStore.getDefaultPreferences(name = "my_global_settings")
+
+// Get default unencrypted proto store
+// val defaultUserPrefsHandler = NewDataStore.getDefaultProtoStore(
+//     serializer = UserPreferencesSerializer, // Your serializer
+//     fileName = "global_user_prefs.pb"
+// )
+```
+The `name`, `encrypted`, and `migrations` parameters are also available on these default accessor methods.
+
 ## Usage Examples
 
 ### Preferences DataStore
@@ -53,6 +86,31 @@ val prefsHandler = dataStoreManager.preferences(name = "my_app_settings", encryp
 // For encrypted Preferences (recommended for sensitive data)
 val securePrefsHandler = dataStoreManager.preferences(name = "my_secure_settings", encrypted = true)
 ```
+
+**Providing Migrations (e.g., from SharedPreferences):**
+
+You can provide a list of `DataMigration<Preferences>` to handle migrations, such as migrating from an old SharedPreferences file.
+
+```kotlin
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.core.DataMigration
+import android.content.Context // For context in migration
+
+// Assuming applicationContext is available
+val sharedPrefsToDataStoreMigration = SharedPreferencesMigration(
+    context = applicationContext, // Typically from your Application or DI
+    sharedPreferencesName = "my_old_shared_prefs"
+    // keysToMigrate = setOf("old_key1", "old_key2") // Optional: specify keys
+)
+
+val prefsHandlerWithMigration = dataStoreManager.preferences(
+    name = "my_app_settings",
+    encrypted = false,
+    migrations = listOf(sharedPrefsToDataStoreMigration)
+)
+```
+**Note:** Migrations are primarily for the standard (unencrypted) Preferences DataStore. They do not directly apply when `encrypted = true` (which uses `EncryptedSharedPreferences`), as `EncryptedSharedPreferences` has its own storage format not managed by DataStore's migration system. Manual data transfer would be needed if migrating to/from encrypted preferences with a different scheme.
 
 **2. Saving Data (`put`):**
 
@@ -202,6 +260,38 @@ val secureUserPrefsHandler = dataStoreManager.proto(
     serializer = UserPreferencesSerializer,
     fileName = "secure_user_prefs.pb",
     encrypted = true // REMINDER: Current Proto encryption is a non-functional placeholder!
+)
+```
+
+**Providing Migrations (e.g., for schema changes):**
+
+You can provide a list of `DataMigration<YourProtoType>` to handle schema updates or other data transformations.
+
+```kotlin
+import androidx.datastore.core.DataMigration
+import com.abbasnaqdi.sample.datastore.UserPreferences // Assuming this is your proto class
+
+// Example: A conceptual migration for UserPreferences
+// val userPrefsMigration1To2 = object : DataMigration<UserPreferences> {
+//     override suspend fun shouldMigrate(currentData: UserPreferences): Boolean {
+//         // Logic to check if this version of data needs migration
+//         // return currentData.version < 2 // Assuming a version field in your proto
+//         return false // Placeholder
+//     }
+//     override suspend fun migrate(currentData: UserPreferences): UserPreferences {
+//         // Logic to transform currentData to the new schema
+//         // return currentData.toBuilder().setNewField("defaultValue").setVersion(2).build()
+//         return currentData // Placeholder
+//     }
+//     override suspend fun cleanUp() { /* Optional: Clean up old data if needed */ }
+// }
+
+val userPrefsHandlerWithMigration = dataStoreManager.proto(
+    serializer = UserPreferencesSerializer,
+    fileName = "user_prefs.pb",
+    encrypted = false, // Or true, migrations apply before encryption wrapper if any
+    // migrations = listOf(userPrefsMigration1To2) // Pass your migration list
+    migrations = listOf() // Example with an empty list
 )
 ```
 

@@ -2,6 +2,7 @@ package com.abbasnaqdi.preferences // Updated package
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.datastore.core.DataMigration // New import
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -38,28 +39,35 @@ interface PrefsOperations {
 }
 
 class PreferencesHandler(
-    appContext: Context, // Made appContext public for operations classes if needed, or pass selectively
+    appContext: Context,
     name: String,
-    encrypted: Boolean
+    encrypted: Boolean,
+    migrations: List<DataMigration<Preferences>> = emptyList() // New parameter
 ) {
     private val operations: PrefsOperations by lazy {
         if (encrypted) {
+            // EncryptedSharedPreferences does not directly support DataStore migrations in the same way.
+            // Migrations for EncryptedSharedPreferences would need to be manual before initialization
+            // or by reading from an old source and writing to new EncryptedSharedPreferences.
+            // For now, the migrations parameter will be ignored for the encrypted path.
+            // A warning or documentation should reflect this.
             val masterKey = MasterKey.Builder(appContext)
                 .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                 .build()
             val encSharedPreferences: SharedPreferences = EncryptedSharedPreferences.create(
                 appContext,
-                name, // Filename for EncryptedSharedPreferences
+                name,
                 masterKey,
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
-            EncryptedPrefsOperations(encSharedPreferences) // Inject dependency
+            EncryptedPrefsOperations(encSharedPreferences)
         } else {
             val dataStoreInstance: DataStore<Preferences> = PreferenceDataStoreFactory.create(
-                produceFile = { appContext.preferencesDataStoreFile(name) }
+                produceFile = { appContext.preferencesDataStoreFile(name) },
+                migrations = migrations // Pass migrations here
             )
-            DataStorePrefsOperations(dataStoreInstance) // Inject dependency
+            DataStorePrefsOperations(dataStoreInstance)
         }
     }
 

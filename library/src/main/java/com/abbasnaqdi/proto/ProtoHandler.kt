@@ -2,6 +2,7 @@ package com.abbasnaqdi.proto // Updated package
 
 import android.content.Context
 import androidx.datastore.core.CorruptionException
+import androidx.datastore.core.DataMigration // New import
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.Serializer
@@ -13,11 +14,13 @@ import kotlinx.coroutines.flow.catch
 import java.io.IOException
 import kotlin.Result // Ensure this is kotlin.Result
 
-class ProtoHandler<T : Any>(
+class ProtoHandler<T : Any>( // Assuming primary constructor for modifications
     private val appContext: Context,
     private val fileName: String, // e.g., "user_prefs.pb"
     private val userSerializer: Serializer<T>, // Renamed for clarity
-    private val encrypted: Boolean
+    private val encrypted: Boolean,
+    private val migrations: List<DataMigration<T>> = emptyList() // New parameter
+    // dataStoreForTest: DataStore<T>? = null // This was for a test specific constructor, not using here
 ) {
     private val actualSerializer: Serializer<T> by lazy {
         if (encrypted) {
@@ -37,7 +40,8 @@ class ProtoHandler<T : Any>(
             produceFile = { appContext.dataStoreFile(fileName) },
             corruptionHandler = ReplaceFileCorruptionHandler(
                 produceNewData = { actualSerializer.defaultValue }
-            )
+            ),
+            migrations = migrations // Pass migrations here
         )
     }
 
@@ -50,12 +54,12 @@ class ProtoHandler<T : Any>(
                 if (exception is IOException || exception is CorruptionException) {
                     // Log the error, perhaps provide a way to recover or signal error state
                     // For now, rethrowing to let the collector handle it, which is common.
-                    throw DataStoreReadException("Error reading Proto DataStore: ${exception.message}", exception)
+                    throw DataStoreReadException("Error reading Proto DataStore: ${exception.message}", exception) // Keep existing catch
                 }
                 throw exception
             }
 
-    suspend fun updateData(transform: suspend (t: T) -> T): Result<T> {
+    suspend fun updateData(transform: suspend (t: T) -> T): Result<T> { // No change to method body
         return try {
             val updatedData = dataStore.updateData(transform)
             Result.success(updatedData)
