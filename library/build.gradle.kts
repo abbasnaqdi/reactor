@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     kotlin("android") // Replaces id 'kotlin-android'
     id("maven-publish")
+    kotlin("plugin.serialization") version "2.0.0" // Use same version as Kotlin plugin
 }
 
 android {
@@ -63,4 +64,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.11")
     androidTestImplementation("junit:junit:4.13.2")
     androidTestImplementation("io.mockk:mockk-android:1.13.11")
+
+    // Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 }

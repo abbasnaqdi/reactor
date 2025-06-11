@@ -112,9 +112,61 @@ val prefsHandlerWithMigration = dataStoreManager.preferences(
 ```
 **Note:** Migrations are primarily for the standard (unencrypted) Preferences DataStore. They do not directly apply when `encrypted = true` (which uses `EncryptedSharedPreferences`), as `EncryptedSharedPreferences` has its own storage format not managed by DataStore's migration system. Manual data transfer would be needed if migrating to/from encrypted preferences with a different scheme.
 
-**2. Saving Data (`put`):**
+**2. Storing Custom Objects (Automatic JSON Serialization):**
 
-`put` is a suspend function. The type of the value is used by the library to store it appropriately.
+Beyond primitive types and `Set<String>`, `PreferencesHandler` can also store instances of your custom data classes. These objects will be automatically serialized to JSON strings using [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) and stored. When you retrieve them, they are deserialized back into your data class instances.
+
+**Requirements for Custom Objects:**
+1.  Your data class must be annotated with `@Serializable` from the Kotlinx Serialization library.
+2.  The module where your `@Serializable` data class is defined needs the Kotlin serialization Gradle plugin:
+    ```kotlin
+    // In your app/module's build.gradle.kts
+    plugins {
+        kotlin("plugin.serialization") version "2.0.0" // Or your Kotlin version
+    }
+    ```
+    (The `NewDataStore` library itself includes the `kotlinx-serialization-json` runtime dependency, so you don't need to add that explicitly unless you use different formats or versions.)
+
+
+**Example with a Custom Object:**
+
+Let's say you have a data class:
+```kotlin
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserProfile(
+    val id: String,
+    val email: String?,
+    val loyaltyPoints: Int
+)
+```
+
+You can save and retrieve it like any other preference:
+```kotlin
+// Inside a coroutine scope
+scope.launch {
+    val userProfile = UserProfile(id = "user123", email = "user@example.com", loyaltyPoints = 1500)
+    prefsHandler.put("user_profile_data", userProfile)
+
+    // Later, to retrieve it:
+    val retrievedProfileFlow: Flow<UserProfile?> = prefsHandler.get<UserProfile>("user_profile_data")
+    val retrievedProfileOnce: Result<UserProfile?> = prefsHandler.readOnce<UserProfile>("user_profile_data")
+
+    retrievedProfileOnce.onSuccess { profile ->
+        if (profile != null) {
+            println("Retrieved profile: ${profile}")
+        } else {
+            println("No profile found or failed to deserialize.")
+        }
+    }
+}
+```
+This makes storing structured preference objects very convenient. For more complex data structures, relationships, or when schema evolution is a major concern, **Proto DataStore** is still the recommended and more robust solution.
+
+**3. Saving Data (Primitives and `Set<String>`):**
+
+`put` is a suspend function. The type of the value is used by the library to store it appropriately for these direct types.
 
 ```kotlin
 import kotlinx.coroutines.launch
@@ -129,9 +181,9 @@ scope.launch {
 }
 ```
 
-**3. Reading Data (`get` Flow):**
+**4. Reading Data (`get` Flow for Primitives and `Set<String>`):**
 
-`get<T>` returns a `Flow<T?>` that emits when the data changes. You must specify the expected type using reified generics.
+`get<T>` returns a `Flow<T?>` that emits when the data changes. You must specify the expected type using reified generics for these direct types.
 
 ```kotlin
 import kotlinx.coroutines.flow.map // Not strictly needed for direct get, but often used with flows
@@ -149,9 +201,9 @@ val userName by userNameFlow.collectAsStateWithLifecycle()
 Text("User: ${userName ?: "Not set"}")
 ```
 
-**4. Reading Data Once (`readOnce`):**
+**5. Reading Data Once (`readOnce` for Primitives and `Set<String>`):**
 
-`readOnce<T>` is a suspend function that returns `Result<T?>`. You must specify the expected type using reified generics.
+`readOnce<T>` is a suspend function that returns `Result<T?>`. You must specify the expected type using reified generics for these direct types.
 
 ```kotlin
 scope.launch {
@@ -169,19 +221,21 @@ scope.launch {
 }
 ```
 
-**5. Removing Data (`remove`):**
+**6. Removing Data (`remove` for Primitives and `Set<String>`):**
 
-`remove<T>` is a suspend function. You need to specify the expected type of the key using reified generics to ensure the correct underlying `Preferences.Key` is targeted for removal.
+`remove<T>` is a suspend function. You need to specify the expected type of the key using reified generics to ensure the correct underlying `Preferences.Key` (or JSON string for custom objects) is targeted for removal.
 
 ```kotlin
 scope.launch {
     prefsHandler.remove<String>("user_name")
     prefsHandler.remove<Int>("login_count")
     prefsHandler.remove<Set<String>>("feature_flags")
+    // For custom objects, if you stored UserProfile with key "user_profile_data":
+    // prefsHandler.remove<UserProfile>("user_profile_data")
 }
 ```
 
-**6. Clearing All Preferences in a Handler (`clear`):**
+**7. Clearing All Preferences in a Handler (`clear`):**
 
 `clear` is a suspend function.
 
